@@ -1,0 +1,12 @@
+---
+- name: Add Docker Repository
+  hosts: all
+  become: true
+  gather_facts: no
+  any_errors_fatal: yes
+  tasks:      
+    - name: Download docker-ce repo and save to /etc/yum.repos.d
+      get_url:
+        url: 'https://download.docker.com/linux/centos/docker-ce.repo'
+        dest: /etc/yum.repos.d/docer-ce.repo
+        mode: 0644

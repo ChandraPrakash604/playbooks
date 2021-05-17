@@ -1,0 +1,42 @@
+---
+  
+- name: Task GCC Installation 
+  hosts: all
+  become: true
+  tasks:
+    - name: copy the files 
+      copy: 
+        src: "{{ item }}"
+        dest: /tmp      
+      with_fileglob: 
+        - /home/commscope/ansible/onecell-ansible/OneCell5G/Repository/devtoolset-3-runtime-3.1-12.sc1.el6.x86_64.rpm
+        - /home/commscope/ansible/onecell-ansible/OneCell5G/Repository/devtoolset-3-gcc-4.9.2-6.2.el7.x86_64.rpm
+        - /home/commscope/ansible/onecell-ansible/OneCell5G/Repository/devtoolset-3-libstdc++-devel-4.9.2-6.2.el7.x86_64.rpm
+        - /home/commscope/ansible/onecell-ansible/OneCell5G/Repository/devtoolset-3-gcc-c++-4.9.2-6.2.el7.x86_64.rpm
+          
+#'    - name: Installing the packages
+#'      yum:
+#'        name: "{{ packages }}"
+#'        state: latest
+#'      vars:
+#'        packages:
+#'            
+#'         - devtoolset-3-runtime-3.1-12.sc1.el6.x86_64.rpm
+#'         - devtoolset-3-gcc-4.9.2-6.2.el7.x86_64.rpm
+#'         -  devtoolset-3-libstdc++-devel-4.9.2-6.2.el7.x86_64.rpm
+#'         -  devtoolset-3-gcc-c++-4.9.2-6.2.el7.x86_64.rpm
+    - name: installing the packages
+      shell: |
+       rpm -iv --replacepkgs devtoolset-3-runtime-3.1-12.sc1.el6.x86_64.rpm
+       rpm -iv --replacepkgs devtoolset-3-gcc-4.9.2-6.2.el7.x86_64.rpm
+       rpm -iv --replacepkgs devtoolset-3-libstdc++-devel-4.9.2-6.2.el7.x86_64.rpm
+       rpm -iv --replacepkgs devtoolset-3-gcc-c++-4.9.2-6.2.el7.x86_64.rpm
+       
+      args:
+        chdir: /tmp
+       
+    - name: Update the 
+      shell: echo "pathmunge /opt/rh/devtoolset-3/root/usr/bin" > /etc/profile.d/gcc492.sh
+      
+    - name: Reboot 
+      reboot:

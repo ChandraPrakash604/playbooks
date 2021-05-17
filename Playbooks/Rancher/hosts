@@ -1,0 +1,24 @@
+[master]
+# apps-fcaps-5gl2dev6-s-2 ansible_ssh_host=10.209.81.48 ansible_user=root ansible_ssh_pass=Airvana123 server_type=master
+# automation-iit-auto-iit-cu-s-2 ansible_ssh_host=10.53.198.177 ansible_user=root ansible_ssh_pass=Commscope123 server_type=master
+# l2-dev2-node58-s-2 ansible_ssh_host=10.53.198.166 ansible_user=root ansible_ssh_pass=Commscope123 server_type=master
+# l2-dev1-hp204-d-2 ansible_ssh_host=10.206.1.204 ansible_user=root ansible_ssh_pass=Airvana123 server_type=master
+#ss-analytics-ansu-s-1 ansible_ssh_host=10.209.81.71  ansible_user=root ansible_ssh_pass=Commscope123 server_type=master
+ansu ansible_ssh_host=10.53.198.173 ansible_user=root ansible_ssh_pass=Commscope123 server_type=master
+#ss-analytics-node19-o-2 ansible_ssh_host=10.193.104.19 ansible_user=root ansible_ssh_pass=airvana123 server_type=master
+#master20711 ansible_ssh_host=10.207.207.11 ansible_user=root ansible_ssh_pass=Airvana123 server_type=master
+
+# host1 ansible_ssh_host=10.53.198.167  ansible_user=root ansible_ssh_pass=Commscope123 server_type=master
+#host3 ansible_ssh_host=10.53.198.193  ansible_user=root ansible_ssh_pass=Commscope123 server_type=master
+
+
+[worker]
+#host2 ansible_ssh_host=10.208.120.179 ansible_user=root ansible_ssh_pass=Commscope123 server_type=worker
+#host3 ansible_ssh_host=10.208.120.177 ansible_user=root ansible_ssh_pass=Commscope123 server_type=worker
+
+# host2 ansible_ssh_host=10.53.198.168 ansible_user=root ansible_ssh_pass=Commscope123 server_type=worker
+#host4 ansible_ssh_host=10.53.198.194  ansible_user=root ansible_ssh_pass=Commscope123 server_type=worker
+
+[master:vars]
+token=token-mcm47:mg6pdl7c5r62ttkx49pkrsk2z2qfgkb88lf7gl2nb6rp4lnxnfv6pf
+clusterName=ansu

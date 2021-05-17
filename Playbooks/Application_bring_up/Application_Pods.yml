@@ -1,0 +1,22 @@
+---
+- name: Bringup gNB Application PODs
+  hosts: master
+  become: true
+  gather_facts: no
+  any_errors_fatal: yes
+  vars:
+    Applications:
+       cu-cp-pod: cs-gnb-cu-cp
+       cu-up-pod: cs-gnb-cu-up
+       du-pod: cs-gnb-du
+       l3uesim-pod: cs-gnb-l3uesim
+       dltg-pod: cs-gnb-dltg
+       ultg-pod: cs-gnb-ultg
+       
+  tasks:
+    - name: Bringing the Application PODS
+      shell: helm install {{item.key}} oc5g-helm-prod-suwanee/{{item.value}} --version 0.1.0-siqbuild.{{app_version}}-int
+      loop: "{{ Applications | dict2items }}"  
+      loop_control:
+        pause: 2
+        

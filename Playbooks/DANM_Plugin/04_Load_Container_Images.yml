@@ -1,0 +1,30 @@
+---
+- name: Load the Container images
+  hosts: all
+  become: true
+  tasks:
+  
+    - name: Load the danm-installer:latest docker image
+      shell: docker load -i danm-installer.tgz
+      args:
+        chdir: /opt/kubernetes/customchange
+      
+    - name: Load the danm-cni-plugins:latest docker image
+      shell: docker load -i danm-cni-plugins.tgz
+      args:
+        chdir: /opt/kubernetes/customchange
+    
+    - name: Load the webhook:latest docker image
+      shell: docker load -i webhook.tgz
+      args:
+        chdir: /opt/kubernetes/customchange
+      
+    - name: Load the svcwatcher:latest docker image
+      shell: docker load -i svcwatcher.tgz
+      args:
+        chdir: /opt/kubernetes/customchange
+    
+    - name: Load the netwatcher:latest docker image
+      shell: docker load -i netwatcher.tgz
+      args:
+        chdir: /opt/kubernetes/customchange

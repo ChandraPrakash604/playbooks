@@ -1,0 +1,83 @@
+---
+- name: Install Kubernetes
+  hosts: master
+  become: true
+  any_errors_fatal: yes
+  tasks:
+  - name: Creating a repository file for Kubernetes
+    file:
+     path: /etc/yum.repos.d/kubernetes.repo
+     state: touch
+     
+  - name: Adding repository details in Kubernetes repo file.
+    blockinfile:
+     path: /etc/yum.repos.d/kubernetes.repo
+     block: |
+      [kubernetes]
+      name=Kubernetes
+      baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+      enabled=1
+      gpgcheck=1
+      repo_gpgcheck=1
+      gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
+        https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+        
+  - name: Install a list of packages
+    shell: yum install kubeadm-1.19.5-0 kubectl-1.19.5-0 kubelet-1.19.5-0 -y --disableexcludes=kubernetes
+    args:
+      warn: no
+      
+  - name: daemon-reload
+    shell: systemctl daemon-reload
+    
+  - name: enable --now kubelet
+    shell: systemctl enable --now kubelet
+    
+---
+- hosts: master
+  become: yes
+  tasks:
+    - name: initialize K8S cluster
+      shell: kubeadm init --pod-network-cidr=172.16.0.0/16 --apiserver-advertise-address=10.0.0.100
+
+    - name: create .kube directory
+      file:
+        path: $HOME/.kube
+        state: directory
+        mode: 0755
+
+    - name: copy admin.conf to user's kube config
+      copy:
+        src: /etc/kubernetes/admin.conf
+        dest: /root/.kube/config
+        remote_src: yes
+
+    - name: install Pod network
+      become: yes
+      shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be0084506e4ec919aa1c114638878db11b/Documentation/kube-flannel.yml >> pod_network_setup.txt
+      args:
+        chdir: $HOME
+        creates: pod_network_setup.txt
+        
+---
+- hosts: master
+  become: yes
+  gather_facts: no
+  any_errors_fatal: yes
+  tasks:
+  - name: Generate join command
+    command: kubeadm token create --print-join-command
+    register: join_command
+
+  - name: Copy join command to local file
+    local_action: copy content="{{ join_command.stdout_lines[0] }}" dest="./join-command"
+    
+- hosts: worker
+  become: yes
+  gather_facts: true
+  tasks:
+    - name: Copy the join command to server location
+      copy: src=join-command dest=/tmp/join-command.sh mode=0777
+
+    - name: Join the node to cluster
+      command: sh /tmp/join-command.sh

@@ -1,0 +1,35 @@
+---
+- name: Task [7-3] Build SRIOV CNI and copy CNI plugin 
+  hosts: all
+  become: true
+  tasks:
+    - name: Create a directory
+      file:
+        path: /opt/kubernetes
+        state: directory
+        
+    - name: Download the file
+      get_url:
+        url: http://10.206.1.205/5G_Softwares/CentOS/TargetServer/Source/sriov-cni.tgz
+        dest: /opt/kubernetes
+    - name: Unarchive
+      unarchive:
+        src: /opt/kubernetes/sriov-cni.tgz
+        dest: /opt/kubernetes
+        remote_src: yes
+        
+    - name: Remove the tgz file
+      file:
+        path: /opt/kubernetes/sriov-cni.tgz
+        state: absent
+        
+    - name: Make a file
+      community.general.make:
+        chdir: /opt/kubernetes/sriov-cni
+        
+    - name: copy the file
+      shell: cp build/sriov /opt/cni/bin
+      args:
+        chdir: /opt/kubernetes/sriov-cni
+        
+        

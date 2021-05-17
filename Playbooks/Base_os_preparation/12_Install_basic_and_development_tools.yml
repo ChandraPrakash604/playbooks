@@ -1,0 +1,69 @@
+---
+- name: Task[1-15] Install “Development Tools”, basic linux tools and any additional packages
+  hosts: all
+  become: true
+  gather_facts: no
+  any_errors_fatal: yes
+  tasks:
+        - name: Install basic packages
+          yum:
+              name: "{{ packages }}"
+          vars:
+              packages:
+                  - vim-enhanced
+                  - net-tools
+                  - rsync
+                  - psmisc
+                  - htop
+                  - lsof
+                  - pciutils
+                  - wget
+                  - tcpdump
+                  - meld
+                  - kdiff3
+                  - git-cola
+                  - lksctp-tools
+                  - bash-completion
+                  - usbutils
+                  - lshw
+                  - sshpass
+                  - jq
+                  - xmlstarlet
+                  - telnet
+                  - golang
+                  - libhugetlbfs
+              state: present
+
+        - name: install the 'Development tools' package group
+          shell: yum groups mark install -y "Development Tools"
+              
+
+        - name: Install build packages
+          yum:
+              name: "{{ packages }}"
+          vars:
+              packages:
+                  - libxml2-devel
+                  - lksctp-tools-devel
+                  - libcurl-devel
+                  - ncurses-devel
+                  - net-snmp-devel
+                  - CUnit-devel
+                  - policycoreutils-python
+                  - scl-utils
+                  - numactl-devel
+                  - libssh 
+
+        - name: Check if /usr/include/libxml exists
+          stat:
+              path: /usr/include/libxml
+          register: sym
+
+        - name: Create symbolic link /usr/include/libxml
+          file:
+              src: libxml2/libxml
+              dest: /usr/include/libxml
+              state: link
+          when: sym.stat.exists == false
+                
+

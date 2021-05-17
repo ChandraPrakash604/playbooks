@@ -1,0 +1,13 @@
+
+PLAY [Pull Docker Images] ******************************************************
+
+TASK [Docker Login] ************************************************************
+fatal: [host2]: FAILED! => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python"}, "changed": true, "cmd": "docker login --username onecellansible --password Commscope123", "delta": "0:00:00.003799", "end": "2021-03-03 13:08:37.767858", "msg": "non-zero return code", "rc": 127, "start": "2021-03-03 13:08:37.764059", "stderr": "/bin/sh: docker: command not found", "stderr_lines": ["/bin/sh: docker: command not found"], "stdout": "", "stdout_lines": []}
+fatal: [host1]: FAILED! => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python"}, "changed": true, "cmd": "docker login --username onecellansible --password Commscope123", "delta": "0:00:00.003848", "end": "2021-03-03 13:08:37.771395", "msg": "non-zero return code", "rc": 127, "start": "2021-03-03 13:08:37.767547", "stderr": "/bin/sh: docker: command not found", "stderr_lines": ["/bin/sh: docker: command not found"], "stdout": "", "stdout_lines": []}
+
+NO MORE HOSTS LEFT *************************************************************
+
+PLAY RECAP *********************************************************************
+host1                      : ok=0    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+host2                      : ok=0    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+

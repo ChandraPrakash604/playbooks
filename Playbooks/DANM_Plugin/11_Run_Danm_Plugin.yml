@@ -1,0 +1,135 @@
+---
+- name: Run the DANM Plugin command
+  hosts: master
+  become: true
+  any_errors_fatal: yes
+  tasks:      
+    - name: kubectl create -f integration/cni_config/danm_rbac.yaml
+      shell: kubectl create -f integration/cni_config/danm_rbac.yaml
+      args:
+        chdir: /opt/kubernetes/danm/
+      ignore_errors: True
+      
+    - name: Update
+      replace:
+        path: /opt/kubernetes/danm/integration/manifests/cni_plugins/cni_plugins_ds.yaml
+        regexp: "imagePullPolicy: .*"
+        replace: "imagePullPolicy: IfNotPresent"
+
+    - name: kubectl create -f integration/manifests/cni_plugins
+      shell: kubectl create -f integration/manifests/cni_plugins
+      args:
+        chdir: /opt/kubernetes/danm/
+      ignore_errors: True
+      
+    - name: Update
+      replace:
+        path: /opt/kubernetes/danm/integration/manifests/netwatcher/netwatcher_ds.yaml
+        regexp: "imagePullPolicy: .*"
+        replace: "imagePullPolicy: IfNotPresent"
+      
+    - name: Ensure the default Apache port is 8080
+      ansible.builtin.lineinfile:
+        path: /opt/kubernetes/danm/integration/manifests/netwatcher/netwatcher_ds.yaml
+        insertafter: "image: netwatcher"
+        line: "          imagePullPolicy: IfNotPresent"
+      
+    - name: kubectl create -f integration/manifests/netwatcher/
+      shell: kubectl create -f integration/manifests/netwatcher/
+      args:
+        chdir: /opt/kubernetes/danm/
+      ignore_errors: True
+      
+    - name:  Create integration/bootstrap_networks/lightweight/calico.yaml file
+      blockinfile:
+        path: /opt/kubernetes/danm/integration/bootstrap_networks/lightweight/calico.yaml
+        create: yes
+        block: | 
+            apiVersion: danm.k8s.io/v1
+            kind: DanmNet
+            metadata:
+              name: calico
+              namespace: kube-system
+            spec:
+              NetworkID: calico
+              NetworkType: calico
+    
+    - name:  Create integration/bootstrap_networks/production/calico.yaml file
+      blockinfile:
+        path: /opt/kubernetes/danm/integration/bootstrap_networks/production/calico.yaml
+        create: yes
+        block: | 
+            apiVersion: danm.k8s.io/v1
+            kind: TenantNetwork
+            metadata:
+              name: calico
+              namespace: kube-system
+            spec:
+              NetworkID: calico
+              NetworkType: calico
+            
+    - name: kubectl create -f integration/bootstrap_networks/lightweight/calico.yaml
+      shell: kubectl create -f integration/bootstrap_networks/lightweight/calico.yaml
+      args:
+        chdir: /opt/kubernetes/danm/
+      ignore_errors: True
+      
+    - name: kubectl create -f integration/bootstrap_networks/production/calico.yaml
+      shell: kubectl create -f integration/bootstrap_networks/production/calico.yaml
+      args:
+        chdir: /opt/kubernetes/danm/
+      ignore_errors: True
+    
+    - name: Run the shell script ./integration/manifests/webhook/webhook-create-signed-cert.sh
+      shell: ./integration/manifests/webhook/webhook-create-signed-cert.sh
+      args:
+        chdir: /opt/kubernetes/danm/
+        
+    - name: Copy webhook and webhook-patch-ca-bundle data to webhook-ca-bundle.yaml
+      shell: cat ./integration/manifests/webhook/webhook.yaml | ./integration/manifests/webhook/webhook-patch-ca-bundle.sh > ./integration/manifests/webhook/webhook-ca-bundle.yaml
+      args:
+        chdir: /opt/kubernetes/danm/
+    
+    - name: Update
+      replace:
+        path: /opt/kubernetes/danm/integration/manifests/webhook/webhook-ca-bundle.yaml
+        regexp: "flannel"
+        replace: "calico"
+      
+    - name: kubectl create -f integration/manifests/webhook/webhook-ca-bundle.yaml
+      shell: kubectl create -f integration/manifests/webhook/webhook-ca-bundle.yaml
+      args:
+        chdir: /opt/kubernetes/danm/
+      ignore_errors: True
+      
+    - name: Update
+      replace:
+        path: /opt/kubernetes/danm/integration/manifests/svcwatcher/svcwatcher_ds.yaml
+        regexp: "flannel"
+        replace: "calico"  
+
+    - name: kubectl create -f integration/manifests/svcwatcher/
+      shell: kubectl create -f integration/manifests/svcwatcher/
+      args:
+        chdir: /opt/kubernetes/danm/
+      ignore_errors: True
+
+    - name:  Create customchange/defaultnetwork.yaml file
+      blockinfile:
+        path: /opt/kubernetes/customchange/defaultnetwork.yaml
+        create: yes
+        block: | 
+            apiVersion: danm.k8s.io/v1
+            kind: ClusterNetwork
+            metadata:
+              name: default
+            spec:
+              NetworkID: calico
+              NetworkType: calico
+    
+    - name: kubectl apply -f customchange/defaultnetwork.yaml
+      shell: kubectl apply -f customchange/defaultnetwork.yaml
+      args:
+        chdir: /opt/kubernetes/
+      ignore_errors: True
+

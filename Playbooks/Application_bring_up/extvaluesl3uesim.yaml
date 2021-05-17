@@ -1,0 +1,14 @@
+gnbOperationMode: OTA
+gnbConfigMode: O1CLI
+X2IpType: ipv4
+O1IpType: ipv4
+E1IpType: ipv4
+F1IpType: ipv4
+DpdkIpType: ipv4
+SIMIpType: ipv4
+#image:
+#    repository: 5gl2devrepo:10080/nr5gl2dev/
+#    tag: ph1024_6.0.00.35.aws
+#debugManualAppStart: true
+nodeSelector:
+    "gnbnodename": "cumachine"

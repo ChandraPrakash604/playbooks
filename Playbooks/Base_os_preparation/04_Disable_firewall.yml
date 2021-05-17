@@ -1,0 +1,20 @@
+---
+- name: Task[1-2] Base OS preparation
+  hosts: all
+  become: true
+  gather_facts: no
+  any_errors_fatal: yes
+  environment:
+    PATH: /usr/local/bin:{{ ansible_env.PATH }}
+  tasks:
+    - name: Check the Firewalld status on the hosts
+      shell: systemctl status firewalld|grep Active
+      register: firewall_output
+      
+    - debug:
+        msg: "{{ firewall_output.stdout }}"
+        
+    - name: Disable firewall on Host
+      shell: "systemctl stop firewalld ; systemctl disable firewalld"
+      when: '"inactive" not in firewall_output.stdout'
+

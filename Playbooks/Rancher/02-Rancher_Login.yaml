@@ -1,0 +1,9 @@
+---
+- name: Rancher Login
+  hosts: master
+  become: true
+  environment:
+    PATH: /usr/local/bin:{{ ansible_env.PATH }}
+  tasks:      
+    - name: Rancher login with the token
+      shell: rancher login https://rancher.india.wirelessworld.airvananet.com/v3 --token {{ token }} --skip-verify --context local:p-fvgnl

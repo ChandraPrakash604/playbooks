@@ -1,0 +1,53 @@
+---
+- name: Task[ 1-8] Install additional repos
+  hosts: all
+  become: true
+  gather_facts: no
+  any_errors_fatal: yes
+  tasks:
+    - name: Installing additional repo1
+      yum:
+        name: "{{ packages }}"
+        state: latest
+        
+      vars:
+        packages:
+          - epel-release
+          - centos-release-scl-rh
+          - deltarpm
+          - unzip
+       
+    - name: copy the CentOS-RT.repo into /etc/yum.repos.d
+      copy:
+        src: /home/commscope/Ansible/Repository/CentOS-RT.repo
+        dest: /etc/yum.repos.d/
+    - name: copy the RPM-GPG-KEY-cern into /etc/pki/rpm-gpg
+      copy: 
+        src: /home/commscope/Ansible/Repository/RPM-GPG-KEY-cern
+        dest: /etc/pki/rpm-gpg/
+
+    - name: Installing additional repo2
+      shell: |
+        echo "[centos-qemu-ev]
+        name=oVirt rebuilds of qemu-kvm-rhev
+        baseurl=http://resources.ovirt.org/pub/ovirt-4.1/rpm/el7Server/
+        enabled=1
+        skip_if_unavailable=1
+        gpgcheck=0
+        " >> /etc/yum.repos.d/CentOS-RT.repo ; rm -f CentOS-RT.repo RPM-GPG-KEY-cern
+
+    - name: upgrade all packages 
+      yum:
+              name: '*'
+              state: latest
+              exclude: kernel-rt*, tuned
+              skip_broken: yes
+      register: yum_update_exec_result
+      ignore_errors: True
+        
+    - name: Unconditionally reboot the machine with all defaults
+      reboot:
+      when: yum_update_exec_result.changed
+
+    
+

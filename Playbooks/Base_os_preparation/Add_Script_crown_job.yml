@@ -1,0 +1,32 @@
+---
+- name: "Add script, crontab job to enable SRIOV VFs at boot time"
+  hosts: all
+  become: true
+  gather_facts: no
+  any_errors_fatal: yes
+  tasks:
+    - name: Add script
+      blockinfile:
+         path: /usr/local/bin/enablesriovvfs.sh
+         create: yes
+         mode: u=rwx,g=rx,o=rx
+         block:  |       
+           #!/bin/bash
+
+           cd /opt/dpdk-19.11/x86_64-native-linux-gcc
+           /usr/sbin/modprobe uio
+           /usr/sbin/insmod kmod/igb_uio.ko
+           /usr/sbin/insmod kmod/rte_kni.ko
+           /usr/sbin/modprobe vfio-pci
+
+           /usr/bin/mst start
+           sleep 2
+
+           echo 32 > /sys/class/net/enp101s0f0/device/sriov_numvfs
+           echo 32 > /sys/class/net/enp101s0f1/device/sriov_numvfs
+       
+      when: ansible_system_vendor == "Supermicro"
+    - name: "Add to crontab"
+    
+      shell:  (crontab -l 2>/dev/null; echo "@reboot /usr/local/bin/enablesriovvfs.sh &>/dev/null &") | crontab -
+

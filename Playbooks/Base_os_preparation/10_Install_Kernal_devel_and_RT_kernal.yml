@@ -1,0 +1,42 @@
+---
+- name: Task[1-11] 	Install kernel-devel and rt kernel
+  hosts: all
+  become: true
+  gather_facts: no
+  any_errors_fatal: no
+  tasks:
+  
+    - name: Get the package facts
+      package_facts:
+        manager: "auto"
+        
+    - name : Removed tuned packages
+      yum:
+        name: tuned
+        state: absent
+    - name:  copy the required packeges into the host
+      copy: 
+        src: "{{ item }}"
+        dest: /opt     
+      with_fileglob:
+        - /home/commscope/Ansible/Repository/tuned-2.9.0-1.el7fdp.noarch.rpm
+        - /home/commscope/Ansible/Repository/kernel-rt-3.10.0-693.2.2.rt56.623.el7.x86_64.rpm
+        - /home/commscope/Ansible/Repository/kernel-rt-devel-3.10.0-693.2.2.rt56.623.el7.x86_64.rpm
+    - name: Install kernel-devel and rt kernel
+#      shell: rpm -ivh '{{ item }}'
+#      args:
+#        chdir: /opt  
+      yum:
+        name: '/opt/{{ item }}'
+        state: present
+      loop:
+          - tuned-2.9.0-1.el7fdp.noarch.rpm
+          - kernel-rt-3.10.0-693.2.2.rt56.623.el7.x86_64.rpm
+          - kernel-rt-devel-3.10.0-693.2.2.rt56.623.el7.x86_64.rpm
+      register: yum_update_exec_result
+
+    - name: Unconditionally reboot the machine with all defaults
+      reboot:
+      when: yum_update_exec_result.changed
+  
+ 

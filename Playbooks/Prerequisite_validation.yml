@@ -1,0 +1,40 @@
+---
+- name: Tasks to validate all the prerequisites for the kubernetes cluster build
+  hosts: all
+  become: true
+  any_errors_fatal: yes
+  tasks:
+    - name: check for the Base system operating system 
+      debug:
+        msg: OS of {{ ansible_ssh_host}} is {{ ansible_distribution }} {{ ansible_distribution_major_version }}
+      
+    - name: Check for version 
+      debug:
+        msg: This the valid version 
+      when: ansible_distribution == "CentOS" and ansible_distribution_major_version > '6'
+      
+    - name: ping
+      shell: ping -c 1 -w 2 8.8.8.8
+      register: ping_output
+      ignore_errors: true
+      
+    - debug:
+        msg : "{{ ping_output.stdout }}"
+        
+    - name: Install the PCI Utility
+      yum:
+        name: pciutils
+        state: present
+        
+    - name: To check the NIC cards
+      shell: lspci -nn | grep Ethernet
+      register: nic_output
+      
+    - name: adding into Dummy variable
+      add_host:
+        name: "server_value"
+        value: "Dell"
+           
+   
+    - debug:
+        msg: " System Manufacture :- {{ ansible_system_vendor }}"

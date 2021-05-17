@@ -1,0 +1,21 @@
+---
+- name: Copy Binary from Ansu to Remote and Check rancher version
+  hosts: master
+  become: true
+  environment:
+    PATH: /usr/local/bin:{{ ansible_env.PATH }}
+  tasks:      
+    - name: Copy a "rancher" file on the remote machine
+      copy:
+        src: /root/rancher-v2.4.10/rancher
+        dest: /usr/local/bin/
+        owner: root
+        group: root
+        mode: 0755
+          
+    - name: Print the Rancher Version
+      shell: rancher -v
+      register: output
+
+    - debug:
+        msg: "{{ output.stdout }}"

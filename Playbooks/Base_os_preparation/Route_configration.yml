@@ -1,0 +1,36 @@
+---
+- name: Task configure Route
+  hosts: all
+  become: true
+  gather_facts: no
+  any_errors_fatal: yes
+  tasks: 
+  
+    - name: Get the content of the file
+      shell: cat /etc/sysconfig/network-scripts/route-eno2
+      register: network_outfile
+      
+    - name: Disable the NetworkManager
+      shell: |
+        systemctl stop NetworkManager
+        systemctl disable NetworkManager
+      when: "'10.2.0.0' not in  network_outfile.stdout"
+      
+    - name: add the 10.2.0.0 in to the network file
+      lineinfile:
+        path: /etc/sysconfig/network-scripts/route-eno2
+        line: 10.2.0.0/16 via 10.53.199.254 dev eno2
+        
+    - name: add the 10.2.0.0 in to the network file
+      lineinfile:
+        path: /etc/sysconfig/network-scripts/route-eno2
+        line: 10.45.0.0/16 via 10.53.198.254 dev eno2
+        
+    - name: Restart the service
+      shell:  service network restart
+     
+    - name: Ping check 
+      shell: ping -c 1 10.2.200.168       
+    
+    
+    

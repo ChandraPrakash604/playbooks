@@ -1,0 +1,138 @@
+---
+- name: Base OS preparation
+  hosts: all
+  become: true
+  any_errors_fatal: yes
+  gather_facts: yes
+  tasks:
+    - name: Installing the Mellanoinx 
+      block:
+    
+        - name: Install packages required for Mellanox driver build
+          yum:
+            name: '{{ packages }}'
+            state: latest 
+
+          vars:
+            packages:
+              - cmake
+              - gcc
+              - libudev-devel
+              - make
+              - pkgconfig
+              - gtk2
+              - atk
+              - cairo
+              - tcl
+              - tk
+              - cmake3
+              - ninja-build
+              - pandoc
+              - python-devel
+              - valgrind-devel
+              - redhat-rpm-config
+              - rpm-build
+              - gcc-gfortran
+              - tcsh
+              - libdb-devel
+              - libusbx
+              - glib2-devel
+              - lsof
+              - libusbx-devel
+              - pciutils-devel
+              - flex
+              - fuse-devel
+              - fuse-libs
+              - bison
+              - libmnl-devel
+              - systemd-devel
+              - binutils-devel
+              - iptables-devel
+              - libtool
+              - elfutils-devel
+              - libnl3-devel
+              
+        - stat:
+            path: /root/MLNX_OFED_LINUX-5.1-2.3.7.1-rhel7.9-x86_64.tgz
+          register: result      
+        - name: Copy Mellanox OFED (Binary Installation)
+          copy:
+            src: /home/commscope/Ansible/Repository/MLNX_OFED_LINUX-5.1-2.3.7.1-rhel7.9-x86_64.tgz
+            dest: /root
+          when: result.stat.exists == false
+          
+        - name: Unarchive the MLNX_OFED_LINUX File
+          ansible.builtin.unarchive:
+            src: /root/MLNX_OFED_LINUX-5.1-2.3.7.1-rhel7.9-x86_64.tgz
+            dest: /root
+            remote_src: yes
+        
+        - name: check the kernal version
+          shell: uname -r
+          register: kernal_version
+        
+        - name: copy the kernal binary
+          copy:
+            src: /home/commscope/Ansible/Repository/kernel-rt-devel-3.10.0-693.2.2.rt56.623.el7.x86_64.rpm
+            dest: /root
+        - name: change the kernal version
+          shell: |
+            rpm -ivh --oldpackage  kernel-rt-devel-3.10.0-693.2.2.rt56.623.el7.x86_64.rpm
+            mount -o remount,rw /boot
+            grub2-set-default "CentOS Linux (3.10.0-693.2.2.rt56.623.el7.x86_64) 7 (Core)"
+            grub2-mkconfig -o /boot/grub2/grub.cfg
+          register: changed_kernal  
+          when: kernal_version.stdout != '3.10.0-693.2.2.rt56.623.el7.x86_64'
+      
+        - name: Reboot the server if change in the kernal version
+          reboot:
+          when: changed_kernal.changed
+      
+        - name: Execute the Mellanox installation script
+          shell: ./mlnxofedinstall --add-kernel-support --skip-repo
+          args:
+            chdir: /root/MLNX_OFED_LINUX-5.1-2.3.7.1-rhel7.9-x86_64
+       
+        - name: Reset Mallenox Device 
+          shell: |
+            mlxfwreset -d /dev/mst/mt4115_pciconf0.1 reset -y
+            mlxfwreset -d /dev/mst/mt4115_pciconf0 reset -y
+        
+        - name: Reboot the system
+          reboot:
+    
+        - name: Check the installation 
+          shell: |
+            insmod /lib/modules/$(uname -r)/extra/mlnx-ofa_kernel/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.ko
+            mst start
+            ibv_devinfo
+            mst status -v
+            mlxconfig -d /dev/mst/mt4115_pciconf0 query 
+        
+        - name: Check number of supported VFs and update 
+          shell: |
+            mlxconfig -d /dev/mst/mt4115_pciconf0 query NUM_OF_VFS
+            mlxconfig -y -d /dev/mst/mt4115_pciconf0 set NUM_OF_VFS=32
+            mlxconfig -y -d /dev/mst/mt4115_pciconf0.1 set NUM_OF_VFS=32
+        
+        - name: Reboot the server after the VFs modification
+          reboot: 
+          
+        - name: Check the number of VFS
+          shell: |
+            mst start
+            mlxconfig -d /dev/mst/mt4115_pciconf0 query NUM_OF_VFS
+          register: VNF_output
+          failed_when: '"32" not in VNF_output.stdout'
+           
+      when: ansible_system_vendor == "Supermicro"    
+      
+    - name: Print the system vendor
+      debug:
+        msg: "{{ansible_system_vendor}}"
+          
+       
+      
+      
+        
+         

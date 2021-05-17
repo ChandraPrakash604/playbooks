@@ -1,0 +1,11 @@
+---
+- name: copy the file from master to worker
+  hosts: worker
+  gather_facts : yes
+  tasks:
+    - name: Copy Remote-To-Remote (from Master to Worker)
+      synchronize:
+        src: /etc/cni/net.d/00-danm.conf
+        dest: /etc/cni/net.d/
+        recursive: yes
+      delegate_to: host1

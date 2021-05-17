@@ -1,0 +1,23 @@
+---
+- name: Task to create a interfaces
+  hosts: all
+  become: true
+  any_errors_fatal: yes
+  gather_facts: no
+  
+  tasks:
+    - name: copy the images 
+      copy:
+        src: contimages
+        dest: /root
+        
+    - name: Load the images into server
+      shell: |
+        cd /root/contimages
+        for image in $(ls *.tgz)
+        do
+           docker load -i $image
+        done
+
+        
+        

@@ -1,0 +1,30 @@
+---
+- name: Deamon Configuration for Docker
+  hosts: all
+  become: true
+  gather_facts: no
+  any_errors_fatal: yes
+  tasks:          
+    - name: Creates directory /etc/docker
+      file:
+        path: /etc/docker
+        state: directory
+        
+    - name: Setup daemon configurations
+      shell: |
+        cat > /etc/docker/daemon.json <<EOF
+        {
+        "exec-opts": ["native.cgroupdriver=systemd"],
+        "log-driver": "json-file",
+        "log-opts": {
+          "max-size": "100m"
+        },
+        "storage-driver": "overlay2",
+        "storage-opts": [
+        "overlay2.override_kernel_check=true"
+        ],
+        "data-root": "/home/slash/var/lib/docker",
+        "insecure-registries" : ["5grepo:5000"] 
+        }
+        EOF
+      

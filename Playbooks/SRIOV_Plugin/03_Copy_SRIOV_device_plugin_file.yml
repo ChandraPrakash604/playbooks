@@ -1,0 +1,25 @@
+--- 
+- name: Task Build SRIOV network device plugin and copy the container image
+  hosts: all
+  gather_facts : yes
+  any_errors_fatal: yes
+  tasks:
+  - name: Download and Unarchive
+    unarchive:
+      src: http://10.206.1.205/5G_Softwares/CentOS/TargetServer/Source/sriov-network-device-plugin.tgz
+      dest: /opt/kubernetes/sriov-network-device-plugin/
+      remote_src: yes
+  - name: Remove the tgz file
+    file:
+     path: /opt/kubernetes/sriov-network-device-plugin.tgz
+     state: absent
+  - name: copy sriov_device_plugin.tgz
+    shell: wget http://10.206.1.205/5G_Softwares/CentOS/TargetServer/Source/sriovimages/sriov
+    args:
+        chdir: /opt/kubernetes/sriov-network-device-plugin/
+        
+      
+     
+      
+        
+      

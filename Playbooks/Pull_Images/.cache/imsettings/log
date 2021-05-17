@@ -1,0 +1,35 @@
+[ 1618297206.314177]: IMSettings-Daemon[6684]: INFO: Starting imsettings-daemon...
+[ 1618297206.314258]: IMSettings-Daemon[6684]: INFO:   [HOME=/home/airvana/.config/imsettings]
+[ 1618297206.314281]: IMSettings-Daemon[6684]: INFO:   [XINPUTRCDIR=/etc/X11/xinit/]
+[ 1618297206.314307]: IMSettings-Daemon[6684]: INFO:   [XINPUTDIR=/etc/X11/xinit/xinput.d/]
+
+[ 1618297206.314333]: IMSettings-Daemon[6684]: INFO:   [MODULEDIR=/usr/lib64/imsettings]
+
+[ 1618297206.314358]: IMSettings-Daemon[6684]: INFO:   [MODULES=gsettings]
+
+imsettings information
+==========================
+XINPUTRC: N/A
+Is DBus enabled: yes
+Is imsettings enabled: yes
+Is GTK+ supported: no
+Is Qt supported: no
+DESKTOP: unknown
+GUESS_DESKTOP: 
+DISABLE_IMSETTINGS: 
+IMSETTINGS_DISABLE_DESKTOP_CHECK: 
+DBUS_SESSION_BUS_ADDRESS: unix:abstract=/tmp/dbus-UqZSMeT9Tm,guid=493e32eeee6e38f25c2828ed60754176
+GTK_IM_MODULE: 
+QT_IM_MODULE: 
+XMODIFIERS: 
+IMSETTINGS_MODULE: none
+IMSETTINGS_INTEGRATE_DESKTOP: yes
+
+
+[ 1618297230.753479]: IMSettings-Daemon[6684]: WARNING **: Child process exited with code 1
+[ 1618297230.981458]: IMSettings-Daemon[6684]: INFO: Attempting to switch IM to none [lang=en_US.UTF-8, update=false]
+
+[ 1618297231.000630]: IMSettings-Daemon[6684]: WARNING **: Child process exited with code 1
+[ 1618297231.000735]: IMSettings-Daemon[6684]: INFO:   no need to invoke any auxiliary process for none
+[ 1618297231.000762]: IMSettings-Daemon[6684]: INFO:   no need to invoke any main process for none
+[ 1618297231.000902]: IMSettings-GSettings backend[6684]: INFO: Setting up gtk-im-context-simple:xim as gtk+ immodule

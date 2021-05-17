@@ -1,0 +1,13 @@
+[master]
+#host1 ansible_ssh_host=10.53.58.116 ansible_user=root ansible_ssh_pass=Airvana123! server_type=master
+#host1 ansible_ssh_host=10.53.202.65 ansible_user=root ansible_ssh_pass=Commscope123 server_type=master
+#host1 ansible_ssh_host=10.53.198.25 ansible_user=root ansible_ssh_pass=Commscope123 server_type=master
+[worker]
+#host2 ansible_ssh_host=10.53.58.68 ansible_user=root ansible_ssh_pass=Airvana123! server_type=worker
+
+10.53.198.26 ansible_ssh_host=10.53.198.26 ansible_user=root ansible_ssh_pass=Commscope123 server_type=worker
+
+[master:vars]
+token=token-mcm47:mg6pdl7c5r62ttkx49pkrsk2z2qfgkb88lf7gl2nb6rp4lnxnfv6pf
+
+

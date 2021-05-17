@@ -1,0 +1,12 @@
+---
+- import_playbook: 01_Get_Code_Build_danm_Image.yaml
+- import_playbook: 02_Save_and_Copy_Container_Image.yml
+- import_playbook: 03_Copy_images_to_worker.yaml
+- import_playbook: 04_Load_Container_Images.yml
+- import_playbook: 05_Command_kubectl_create.yml
+- import_playbook: 06_Danm_conf.yml
+- import_playbook: 07_Copy_conf_to_worker.yaml
+- import_playbook: 08_Each_node_command.yml
+- import_playbook: 09_Create_file_danmc.yml
+- import_playbook: 10_Copy_danm_to_worker.yaml
+- import_playbook: 11_Run_Danm_Plugin.yml

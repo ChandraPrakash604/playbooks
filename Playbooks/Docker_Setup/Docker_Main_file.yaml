@@ -1,0 +1,8 @@
+---
+#- import_playbook: ../Base_os_preparation/01_DNS_File_update.yml
+- import_playbook: 01_Install_required_packages.yaml
+- import_playbook: 02_Add_Docker_repository.yaml
+- import_playbook: 03_Install_Docker_CE.yaml
+- import_playbook: 04_Daemon_Configuration_for_Docker.yaml
+- import_playbook: 05_Enable_and_Start_Docker.yaml
+- import_playbook: 06_Run_sample_docker.yaml

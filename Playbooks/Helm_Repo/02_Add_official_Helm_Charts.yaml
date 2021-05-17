@@ -1,0 +1,12 @@
+---
+- name: Add official Helm stable charts
+  hosts: all
+  become: true
+  tasks:      
+    - name: Add helm repo
+      shell: helm repo add 5grepo http://10.209.81.33:10080/chartrepo/5grepo
+      tags:
+        - dev_repo
+      
+    - name: Update helm repo
+      shell: helm repo update

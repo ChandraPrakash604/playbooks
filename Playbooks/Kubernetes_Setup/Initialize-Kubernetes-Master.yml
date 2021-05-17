@@ -1,0 +1,47 @@
+- hosts: master
+  become: yes
+  gather_facts: no
+  any_errors_fatal: yes
+  tasks:
+  - name: Delete clusterfile if present
+    file:
+      path: /root/clusterconfig.yaml
+      state: absent
+  - name: Prepare cluster configuration file
+    copy: 
+      src: /home/commscope/Ansible/Repository/clusterconfig.yaml
+      dest: /root
+    
+  - name: Initialize the control-plan
+    shell: |
+      docker login --username onecellansible --password Commscope123
+      kubeadm config images pull 
+      kubeadm init --config clusterconfig.yaml | tee kubeadmininit.txt
+  - name: Copying required files
+    shell: |
+      mkdir -p $HOME/.kube
+      sudo yes | cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+      sudo chown $(id -u):$(id -g) $HOME/.kube/config
+    args:
+      warn: no  
+  - name: Install a Pod network add-on tigera-operator
+    shell: kubectl apply -f http://10.206.1.205/5G_Softwares/CentOS/TargetServer/Source/tigera-operator.yaml
+  - name: Install a pod network
+    copy:
+      src: /home/commscope/Ansible/Repository/custom-resources.yaml
+      dest: /root
+  - name: Apply the configuration
+    shell: kubectl apply -f /root/custom-resources.yaml
+    
+  - name: Check if CoreDNS Pod is Running
+    shell: kubectl get pods --all-namespaces
+    register: pod_output
+  - name: To be able to schedule Pods on the Master node, run command
+    shell: kubectl taint nodes --all node-role.kubernetes.io/master-
+    tags:
+      - untaint
+  - name: List tokens
+    shell: kubeadm token list
+  - name: Pause for 7 minutes to to become Pods running
+    pause:
+      minutes: 7

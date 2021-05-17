@@ -1,0 +1,19 @@
+---
+- hosts: master
+  become: yes
+  gather_facts: no
+  any_errors_fatal: yes
+  tasks:
+   - name: Get the staus of the all the pods
+     shell: kubectl get pods -A
+     register: pods_output
+     
+   - debug:
+       msg: "{{ pods_output.stdout_lines}}"
+       
+   - name: validate the pods status
+     debug:
+       msg: "Pod creation in not yet successful"
+     failed_when: "'Pending' or 'Terminating' in pods_output.stdout_lines"
+     
+     

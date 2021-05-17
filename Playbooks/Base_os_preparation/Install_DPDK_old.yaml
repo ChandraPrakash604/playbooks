@@ -1,0 +1,12 @@
+---
+- name: Task [1- 21] 	DPDK Installation
+  hosts: all
+  become: true
+  gather_facts: no
+  any_errors_fatal: yes
+  tasks:
+    - name: Installing the DPDK
+      script: /home/commscope/ansible/onecell-ansible/OneCell5G/Scripts/install_dpdk_code.sh
+      ignore_errors: true
+      
+

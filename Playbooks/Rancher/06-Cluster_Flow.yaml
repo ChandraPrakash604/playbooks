@@ -1,0 +1,23 @@
+---
+- name: ClusterFlow
+  hosts: master
+  become: true
+  tasks:
+    - name:  Create logging Cluster FLow file
+      blockinfile:
+        path: /opt/rancher/logging_clusterflow.yaml
+        create: yes
+        block: | 
+            apiVersion: logging.banzaicloud.io/v1beta1
+            kind: ClusterFlow
+            metadata:
+              name: es-cluster-flow
+            spec:
+              globalOutputRefs:
+              - es-cluster-output
+              
+    - name: Applying the Cluster Flow file
+      shell: kubectl -n cattle-logging-system apply -f /opt/rancher/logging_clusterflow.yaml
+      args:
+        chdir: /opt/rancher/
+      ignore_errors: True

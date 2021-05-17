@@ -1,0 +1,23 @@
+---
+- name: Download and Copy the Helm Binary
+  hosts: all
+  become: true
+  tasks:      
+    - name: Download and Unarchive a helm file
+      ansible.builtin.unarchive:
+        src: https://get.helm.sh/helm-v3.5.3-linux-amd64.tar.gz
+        dest: /root/
+        remote_src: yes
+      
+    - name: Remove the helm.tgz file
+      file:
+        path: helm-v3.5.3-linux-amd64.tar.gz
+        state: absent
+    
+    - name: Move helm to local bin
+      command: mv linux-amd64/helm /usr/local/bin/
+      
+    - name: Remove the linux-amd64 file
+      file:
+        path: linux-amd64
+        state: absent

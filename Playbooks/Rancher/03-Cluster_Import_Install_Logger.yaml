@@ -1,0 +1,60 @@
+---
+- name: Import the cluster
+  hosts: master
+  become: true
+  environment:
+    PATH: /usr/local/bin:{{ ansible_env.PATH }}
+  tasks:
+     - name: Create rancher cluster
+       shell: rancher cluster create {{ clusterName }} --import
+       
+     - name: Import the existing cluster
+       shell: rancher cluster import {{ clusterName }} -q | tail -1
+       register: output
+
+     - name: Run the Rancher Import Command
+       shell: "{{ output.stdout }}"    
+       args:
+        warn: false 
+    
+     - name: List the clusters
+       shell: rancher cluster ls | grep {{ clusterName }}
+       register: clusterList
+      
+     - debug:
+        msg: "{{ clusterList.stdout.split()[0] }}"
+        
+     - name: Add oc5g-helm-prod-suwanee
+       shell: helm repo add oc5g-helm-prod-suwanee https://binaryrepo-east.arrisi.com/artifactory/oc5g-helm-prod-suwanee/
+       
+     - name: Add helm repo
+       shell: helm repo add stable https://charts.helm.sh/stable
+      
+     - name: Update helm repo
+       shell: helm repo update
+       
+     - name: Pause for 2 minutes
+       pause:
+         minutes: 2
+      
+     - name: Remove fleet-system namespace
+       shell: kubectl delete ns fleet-system
+      
+#     - name: Copy Logging Config Files to Remote host
+#       copy:
+#         src: /home/commscope/ansible/onecell-ansible/OneCell5G/Repository/{{ item }}
+#         dest: /opt/rancher/
+#         owner: root
+#         group: root
+#         mode: 0755
+#       with_items:
+#         - rancher-logging-3.8.201.tgz
+#         - rancher-logging-crd-3.8.201.tgz
+#         - values-rancher-logging-3.8.201.yaml
+#         - values-rancher-logging-crd-3.8.201.yaml
+# 
+#     - name: Install Operator CRD
+#       shell: helm upgrade --install=true --create-namespace --namespace=cattle-logging-system --timeout=10m0s --values=/opt/rancher/values-rancher-logging-crd-3.8.201.yaml --version=3.8.201 --wait=true rancher-logging-crd /opt/rancher/rancher-logging-crd-3.8.201.tgz --set clusterName={{ clusterName }} --set clusterId={{ clusterList.stdout.split()[0] }}
+#     
+#     - name: Install Logging Operator
+#       shell: helm upgrade --install=true --namespace=cattle-logging-system --timeout=10m0s --values=/opt/rancher/values-rancher-logging-3.8.201.yaml --version=3.8.201 --wait=true rancher-logging /opt/rancher/rancher-logging-3.8.201.tgz --set clusterName={{ clusterName }} --set clusterId={{ clusterList.stdout.split()[0] }}

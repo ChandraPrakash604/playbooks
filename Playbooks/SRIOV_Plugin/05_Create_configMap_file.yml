@@ -1,0 +1,29 @@
+---
+- name: Creating the ConfigMap file
+  hosts: master
+  become: true
+  any_errors_fatal: yes
+  tasks:
+    - name: Create a directory
+      file:
+        path: /opt/kubernetes/sriov-network-device-plugin/customchanges
+        state: directory
+         
+
+    - name:  ConfigMap that defines SR-IOV resrouce pool configuration for Broadcomm NIC card
+      copy:
+        src: /home/commscope/Ansible/Playbooks/SRIOV_Plugin/mlnx_sriov_configMap.yaml
+        dest: /opt/kubernetes/sriov-network-device-plugin/customchanges/configMap.yaml
+      when: ansible_system_vendor == "Supermicro"
+        
+    - name:  ConfigMap that defines SR-IOV resrouce pool configuration for Broadcomm NIC card
+      copy:
+        src: /home/commscope/Ansible/Playbooks/SRIOV_Plugin/bcm_sriov_configMap.yaml
+        dest: /opt/kubernetes/sriov-network-device-plugin/customchanges/configMap.yaml
+      when: ansible_system_vendor == "Dell Inc."
+      
+    - name: apply the configMap
+      shell: kubectl create -f configMap.yaml
+      args:
+        chdir: /opt/kubernetes/sriov-network-device-plugin/customchanges/
+      ignore_errors: true

@@ -1,0 +1,35 @@
+[ 1618297172.303658]: IMSettings-Daemon[4248]: INFO: Starting imsettings-daemon...
+[ 1618297172.303810]: IMSettings-Daemon[4248]: INFO:   [HOME=/home/airvana/.config/imsettings]
+[ 1618297172.303859]: IMSettings-Daemon[4248]: INFO:   [XINPUTRCDIR=/etc/X11/xinit/]
+[ 1618297172.303898]: IMSettings-Daemon[4248]: INFO:   [XINPUTDIR=/etc/X11/xinit/xinput.d/]
+
+[ 1618297172.303933]: IMSettings-Daemon[4248]: INFO:   [MODULEDIR=/usr/lib64/imsettings]
+
+[ 1618297172.303971]: IMSettings-Daemon[4248]: INFO:   [MODULES=gsettings]
+
+imsettings information
+==========================
+XINPUTRC: N/A
+Is DBus enabled: yes
+Is imsettings enabled: yes
+Is GTK+ supported: no
+Is Qt supported: no
+DESKTOP: unknown
+GUESS_DESKTOP: 
+DISABLE_IMSETTINGS: 
+IMSETTINGS_DISABLE_DESKTOP_CHECK: 
+DBUS_SESSION_BUS_ADDRESS: unix:abstract=/tmp/dbus-FFnKWLtrnJ,guid=426f68567cee40b3ad6a5ed660754149
+GTK_IM_MODULE: 
+QT_IM_MODULE: 
+XMODIFIERS: 
+IMSETTINGS_MODULE: none
+IMSETTINGS_INTEGRATE_DESKTOP: yes
+
+[ 1618297199.373994]: IMSettings-Daemon[4248]: INFO: Release the ownership of com.redhat.imsettings
+
+
+[ 1618297199.374282]: GLib-GIO[4248]: CRITICAL **: Error while sending AddMatch() message: The connection is closed
+
+[ 1618297199.374396]: GLib-GIO[4248]: CRITICAL **: Error while sending AddMatch() message: The connection is closed
+[ 1618297199.374570]: IMSettings-Daemon[4248]: INFO: Unloading imesttings module: gsettings
+[ 1618297199.374676]: IMSettings-Daemon[4248]: INFO: imsettings-daemon is shut down.

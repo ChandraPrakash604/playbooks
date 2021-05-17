@@ -1,0 +1,35 @@
+---
+- name: Logging Generator
+  hosts: master
+  become: true
+  tasks:
+    - name:  Create Logs Generator file
+      blockinfile:
+        path: /opt/rancher/logs_generator.yaml
+        create: yes
+        block: | 
+            apiVersion: apps/v1 
+            kind: Deployment
+            metadata:
+             name: log-generator
+            spec:
+             selector:
+               matchLabels:
+                 app.kubernetes.io/name: log-generator
+             replicas: 1
+             template:
+               metadata:
+                 labels:   
+                   app.kubernetes.io/name: log-generator
+               spec:
+                 containers:
+                 - name: nginx
+                   image: banzaicloud/log-generator:0.3.2
+              
+    - name: Applying the Logs Generator file
+      shell: |
+        docker login --username onecellansible --password Commscope123
+        kubectl -n cattle-logging-system apply -f /opt/rancher/logs_generator.yaml
+      args:
+        chdir: /opt/rancher/
+      ignore_errors: True

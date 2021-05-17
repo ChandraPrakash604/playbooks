@@ -1,0 +1,15 @@
+--- 
+- name: Task Copy Build SRIOV CNI plugin
+  hosts: all
+  gather_facts : yes
+  any_errors_fatal: yes
+  tasks:
+  - name: copy sriov_CNI_plugin into /opt/cni/bin folder
+    copy: 
+      src: /home/commscope/Ansible/Playbooks/SRIOV_Plugin/sriov
+      dest: /opt/cni/bin
+      mode: '0755'  
+      
+     
+      
+        

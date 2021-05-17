@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sriovdp-config
+  namespace: kube-system
+data:
+  config.json: |
+    {
+        "resourceList": [{
+                "resourceName": "sriov_netdevice",
+                "resourcePrefix": "commscope.com",
+                "selectors": {
+                    "vendors": ["14e4"],
+                    "devices": ["16dc"],
+                    "drivers": ["bnxt_en"],
+                    "pfNames": ["p2p2#0-23"]
+                }
+            },
+            {
+                "resourceName": "sriov_dpdkdevice",
+                "resourcePrefix": "commscope.com",
+                "selectors": {
+                    "vendors": ["14e4"],
+                    "devices": ["16dc"],
+                    "drivers": ["bnxt_en"],
+                    "pfNames": ["p2p2#24-31"]
+                }
+            }
+        ]
+    }

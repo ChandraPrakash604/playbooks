@@ -1,0 +1,22 @@
+---
+- name: Kubectl Create Run Commands 
+  hosts: master
+  become: true
+  tasks:      
+    - name: kubectl create -f integration/crds/lightweight
+      shell: kubectl create -f integration/crds/lightweight
+      args:
+        chdir: /opt/kubernetes/danm/
+      ignore_errors: yes
+      
+    - name: kubectl create -f integration/crds/production
+      shell: kubectl create -f integration/crds/production
+      args:
+        chdir: /opt/kubernetes/danm/
+      ignore_errors: yes
+    
+    - name: kubectl create --namespace kube-system serviceaccount danm
+      shell: kubectl create --namespace kube-system serviceaccount danm
+      args:
+        chdir: /opt/kubernetes/danm/
+      ignore_errors: yes

@@ -1,0 +1,69 @@
+---
+- name: Task[1- 13] RT Virtual Host congif update
+  hosts: all
+  become: true
+  gather_facts: no
+  any_errors_fatal: yes
+  tasks:
+    - name: RT virtual host config update
+      yum:
+         name: '{{ packages }}'
+         state: present
+
+      vars:
+        packages:
+          - tuned-profiles-nfv
+          - tuned-profiles-nfv-host
+          - tuned-profiles-nfv-guest
+          - tuned-profiles-realtime
+          
+    - name: Get the number of cores
+      shell: lscpu | grep "^CPU(s):" | awk '{print $2}'
+      register: core_result
+      
+    - name: Update isol core numbers in file
+      lineinfile: 
+         path: /etc/tuned/realtime-virtual-host-variables.conf
+         line: isolated_cores=2-{{ core_result.stdout|int -1 }}
+      
+      
+    - name: get the content of the grub file
+      shell: cat /etc/default/grub
+      register: grub_content
+      
+ 
+    - name: Update default grub parameter
+      when: '"hugepages" not in grub_content.stdout'
+      replace:
+        path: /etc/default/grub
+        regexp: "rhgb quiet"
+        replace: "rhgb quiet processor.max_cstate=1 intel_idle.max_cstate=0 intel_pstate=disable idle=poll default_hugepagesz=1G hugepagesz=1G hugepages=16  intel_iommu=on selinux=0 enforcing=0 nmi_watchdog=0 audit=0 mce=off kthread_cpus=0 irqaffinity=0 cgroup_enable=memory iommu=pt softlockup_panic=0"
+     
+    - name: Display the content of the grub file
+      shell: cat /etc/default/grub
+      register: grub_content_after
+      failed_when: '"hugepages" not in grub_content_after.stdout'
+      
+    - debug: 
+        msg: "{{ grub_content_after.stdout }}"
+       
+    - name: Restart tuned service
+      service: 
+         name: tuned
+         state: restarted
+    
+    - name: enable realtime-virtual-host profile
+      shell: tuned-adm profile realtime-virtual-host
+
+    - name:  Regenerate grub configuration
+      shell: |
+        grub2-mkconfig -o /boot/grub2/grub.cfg 
+        grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg 
+        grep tuned_params= /boot/grub2/grub.cfg 
+        grep tuned_params= /boot/efi/EFI/centos/grub.cfg
+      register: output
+    
+      
+    - name: Reboot the machine after RT virtual configuration
+      reboot:
+      when: output.changed

@@ -1,0 +1,49 @@
+---
+- name: Task[1- 13] RT Virtual Host congif update
+  hosts: all
+  become: true
+  gather_facts: no
+  any_errors_fatal: yes
+  tasks:
+  
+      
+    - name: get the content of the grub file
+      shell: cat /etc/default/grub
+      register: grub_content
+      
+      
+    - name: Check the CPU cores
+      shell: echo "$(( $(lscpu | grep "^CPU(s):" | awk '{print $2}') - 1 ))"
+      register: cpu_cores
+ 
+    - name: Check the CPU cores
+      shell: |
+        tuned-adm off
+        systemctl restart tuned    
+ 
+    - name: Update default grub parameter
+      when: '"hugepages=32" not in grub_content.stdout'
+      replace:
+        path: /etc/default/grub
+        regexp: "rhgb quiet"
+        replace: "rhgb quiet intel_iommu=on iommu=pt selinux=0 enforcing=0 nmi_watchdog=0 softlockup_panic=0 audit=0 intel_pstate=disable mce=off idle=poll hugepagesz=1G hugepages=32 default_hugepagesz=1G kthread_cpus=0 irqaffinity=0,1,2,3 isolcpus=4-{{ cpu_cores.stdout }} rcu_nocbs=4-{{ cpu_cores.stdout }} nohz_full=4-{{ cpu_cores.stdout }} cgroup_enable=memory"
+     
+    - name: Display the content of the grub file
+      shell: cat /etc/default/grub
+      register: grub_content_after
+      failed_when: '"hugepages" not in grub_content_after.stdout'
+      
+    - debug: 
+        msg: "{{ grub_content_after.stdout }}"
+       
+    - name:  Regenerate grub configuration
+      shell: |
+        grub2-mkconfig -o /boot/grub2/grub.cfg 
+        grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg 
+        
+      register: output
+    
+      
+    - name: Reboot the machine after RT virtual configuration
+      reboot:
+      when: output.changed

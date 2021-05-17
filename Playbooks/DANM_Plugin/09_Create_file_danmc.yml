@@ -1,0 +1,59 @@
+---
+- name: Create file /etc/kubernetes/kubeconfig/danmc.yml and copy to worker nodes
+  hosts: master
+  become: true
+  any_errors_fatal: yes
+  tasks:    
+    - name: SECRET_NAME=$(kubectl get --namespace kube-system -o jsonpath='{.secrets[0].name}' serviceaccounts danm)
+      shell: |
+        SECRET_NAME=$(kubectl get --namespace kube-system -o jsonpath='{.secrets[0].name}' serviceaccounts danm)
+        echo $SECRET_NAME
+      register: SECRET_NAME
+    
+    - name: SERVICEACCOUNT_TOKEN=$(kubectl get --namespace kube-system secrets ${SECRET_NAME} -o jsonpath='{.data.token}' | base64 -d)
+      shell: |
+        SERVICEACCOUNT_TOKEN=$(kubectl get --namespace kube-system secrets {{ SECRET_NAME.stdout }} -o jsonpath='{.data.token}' | base64 -d)
+        echo $SERVICEACCOUNT_TOKEN
+      register: SERVICEACCOUNT_TOKEN
+    
+    - name: CLUSTER_NAME=$(kubectl config view -o jsonpath='{.clusters[0].name}')
+      shell: |
+        CLUSTER_NAME=$(kubectl config view -o jsonpath='{.clusters[0].name}')
+        echo $CLUSTER_NAME
+      register: CLUSTER_NAME
+    
+    - name: CLUSTER_SERVER=$(kubectl config view -o jsonpath='{.clusters[0].cluster.server}')
+      shell: |
+        CLUSTER_SERVER=$(kubectl config view -o jsonpath='{.clusters[0].cluster.server}')
+        echo $CLUSTER_SERVER
+      register: CLUSTER_SERVER
+      
+    - name: CLUSTER_CA_CERTIFICATE=$(kubectl config view --flatten -o jsonpath='{.clusters[0].cluster.certificate-authority-data}')
+      shell: |
+        CLUSTER_CA_CERTIFICATE=$(kubectl config view --flatten -o jsonpath='{.clusters[0].cluster.certificate-authority-data}')
+        echo $CLUSTER_CA_CERTIFICATE
+      register: CLUSTER_CA_CERTIFICATE
+            
+    - name:  Create /etc/kubernetes/kubeconfig/danmc.yml file
+      blockinfile:
+        path: /etc/kubernetes/kubeconfig/danmc.yml
+        create: yes
+        block: | 
+            apiVersion: v1
+            kind: Config
+            current-context: default
+            clusters:
+            - cluster:
+                certificate-authority-data: {{ CLUSTER_CA_CERTIFICATE.stdout }}
+                server: {{ CLUSTER_SERVER.stdout }}
+              name: {{ CLUSTER_NAME.stdout }}
+            contexts:
+            - context:
+                cluster: {{ CLUSTER_NAME.stdout }}
+                user: danm
+              name: default
+            users:
+            - name: danm
+              user:
+                token: {{ SERVICEACCOUNT_TOKEN.stdout }}
+            preferences: {}    

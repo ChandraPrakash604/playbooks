@@ -1,0 +1,17 @@
+---
+- name: Task [1-17] Install GCC 4.9.2
+  hosts: all
+  become: true
+  gather_facts: no
+  any_errors_fatal: yes
+  tasks:
+    - name: Install GCC 4.9.2
+      script: /home/commscope/ansible/onecell-ansible/OneCell5G/Scripts/installgcc492_code.sh 
+      register: script_out_put
+      
+    - debug:
+        msg: "{{ script_out_put }}"
+      
+    - name: Reboot the machine after GCC_4.9.2
+      reboot:
+      

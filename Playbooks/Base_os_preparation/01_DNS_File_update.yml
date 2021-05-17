@@ -1,0 +1,24 @@
+---
+- name: Task [1-0] Adding the DNS Server
+  hosts: all
+  become: true
+  gather_facts: no
+  any_errors_fatal: yes
+  
+  tasks:
+    - name: Checking the DNS server in the /etc/resolv.conf file
+      shell: cat /etc/resolv.conf
+      register: DNS_file_out
+      
+      
+    - name: Adding the DNS Server into resolve.conf file
+      blockinfile:
+        path: /etc/resolv.conf
+        create: yes
+        block:  |
+          nameserver 172.17.33.64
+          nameserver 10.53.159.22
+          search localdomain
+      
+      when: '"10.53.159.22" not in DNS_file_out.stdout'
+    

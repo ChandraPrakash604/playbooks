@@ -1,0 +1,14 @@
+---
+-  name: Task [1-19] Verify GCC version
+   hosts: all
+   become: true
+   gather_facts: no
+   any_errors_fatal: yes
+   tasks:
+     - name: Fail task when the gcc version is not 4.9.2
+       command: gcc -dumpversion
+       register: command_result
+       failed_when: "'4.9.2' not in command_result.stdout"
+       
+     - debug:
+         msg: "{{ command_result.stdout }}"

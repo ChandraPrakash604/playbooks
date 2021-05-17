@@ -1,0 +1,90 @@
+---
+- name: Task to create a interfaces
+  hosts: all
+  become: true
+  any_errors_fatal: yes
+  vars:
+    vlan1: 1107
+    vlan2: 1207
+  tasks: 
+    - name: Run the command
+      shell: modprobe 8021q
+    
+    - name: Create a file with content
+      copy:
+        dest: /etc/modules-load.d/vlan.conf
+        content: 8021q
+    - name: Network-config file1
+      copy:
+        dest: /etc/sysconfig/network-scripts/ifcfg-eno1.{{vlan1 }}
+        content: |
+          TYPE=vlan
+          VLAN_ID={{vlan1 }}
+          PHYSDEV=eno1
+          PROXY_METHOD=none
+          BROWSER_ONLY=no
+          BOOTPROTO=none
+          DEFROUTE=no
+          IPV4_FAILURE_FATAL=no
+          IPV6INIT=yes
+          IPV6_AUTOCONF=no
+          IPV6_DEFROUTE=yes
+          IPV6_FAILURE_FATAL=no
+          IPV6_ADDR_GEN_MODE=stable-privacy
+          NAME=vlan{{vlan1 }}
+          DEVICE=eno1.{{vlan1 }}
+          ONBOOT=yes
+          IPADDR=10.213.7.1
+          PREFIX=24
+          GATEWAY=10.213.7.200
+          VLAN=yes
+    - name: Network-config file2
+      copy:
+        dest: /etc/sysconfig/network-scripts/ifcfg-eno1.{{vlan2 }}
+        content: |
+          TYPE=vlan
+          VLAN_ID=1209
+          PHYSDEV=eno1
+          PROXY_METHOD=none
+          BROWSER_ONLY=no
+          BOOTPROTO=none
+          DEFROUTE=yes
+          IPV4_FAILURE_FATAL=no
+          IPV6INIT=yes
+          IPV6_AUTOCONF=no
+          IPV6_DEFROUTE=yes
+          IPV6_FAILURE_FATAL=no
+          IPV6_ADDR_GEN_MODE=stable-privacy
+          NAME=vlan1209
+          DEVICE=eno1.1209
+          ONBOOT=yes
+          IPADDR=10.214.7.1
+          PREFIX=24
+          GATEWAY=10.214.7.200
+          VLAN=yes
+          REORDER_HDR=yes
+          GVRP=no
+          MVRP=no
+          HWADDR=
+          DNS1=10.209.84.1
+          DNS2=8.8.8.8
+          DNS3=4.4.4.4
+          UUID=da32c56b-0af9-a7df-a91f-c4916a478894
+          
+    - name: update the network config file for eno2
+      replace:
+        path: /etc/sysconfig/network-scripts/ifcfg-eno2
+        regexp: 'DEFROUTE=yes'
+        replace: 'DEFROUTE=no'
+    
+    - name: upate the network file for SRIOV
+      replace:
+        path: /etc/sysconfig/network-scripts/ifcfg-enp179s0f0
+        regexp: 'ONBOOT=no'
+        replace: 'ONBOOT=yes'
+          
+    - name: upate the network file for SRIOV
+      replace:
+        path: /etc/sysconfig/network-scripts/ifcfg-enp179s0f1
+        regexp: 'ONBOOT=no'
+        replace: 'ONBOOT=yes'

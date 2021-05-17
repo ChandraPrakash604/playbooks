@@ -1,0 +1,13 @@
+---
+- name: Task [1-5] Enable overlay , br_netfilter kernel module
+  hosts: all
+  become: true
+  gather_facts: no
+  tasks:
+    - name: Enable overlay, br_netfilter kernel modules
+      shell: |
+        cat > /etc/modules-load.d/k8s.conf <<EOF
+        overlay
+        br_netfilter
+        EOF
+

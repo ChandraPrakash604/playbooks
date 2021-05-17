@@ -1,0 +1,24 @@
+---
+- name: Enable Docker and Start the Service
+  hosts: all
+  become: true
+  any_errors_fatal: yes
+  gather_facts: no
+  tasks:  
+    - name: Enable Docker
+      command: "systemctl enable docker"
+    
+    - name: Daemon Reload
+      command: "systemctl daemon-reload"
+      
+    - name: Docker Restart
+      command: "systemctl restart docker"
+      
+    - name: Check the docker version
+      shell: docker --version
+      register: docker_version
+      failed_when: "'19.03.14' not in docker_version.stdout"
+      
+    - debug:
+        msg: "{{docker_version.stdout }}"
+      

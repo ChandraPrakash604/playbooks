@@ -1,0 +1,43 @@
+---
+- name: Task Copy the Strern and Bashrc commands
+  hosts: all
+  become: true
+  gather_facts: no
+  any_errors_fatal: yes
+  
+  tasks:
+    - name: copy the stern file
+      copy:
+        src: /usr/local/bin/stern
+        dest: /usr/local/bin/
+        mode: '755'
+    
+    - name: Get the content of the file
+      shell: cat  ~/.bashrc
+      register: file_output
+      
+    - debug:
+        msg: "{{ file_output.stdout }}"
+      
+    - name: Add the Aliases into bashrc file
+      blockinfile:
+        path: ~/.bashrc
+        block: |
+          # User specific aliases and functions
+          source <(kubectl completion bash)
+          alias k=kubectl
+          alias p='kubectl get pods -o wide'
+          alias n='kubectl get nodes -o wide'
+          alias svc='kubectl get service'
+          alias kdr='kubectl --dry-run=client -o yaml' # kdr run nginx --image=nginx > nginx.yaml
+          alias kap='kubectl apply'
+          alias kd='kubectl delete'
+          alias kbb='kubectl run busybox-test --image=busybox -it --rm --restart=Never --' # kbb <command>
+          alias kdb='kubectl describe'
+          alias kl='kubectl logs'
+          alias ke='kubectl exec -it'
+      when: '"kubectl" not in file_output.stdout'
+      
+    
+
+          

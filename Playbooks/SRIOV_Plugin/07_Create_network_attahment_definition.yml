@@ -1,0 +1,21 @@
+---
+- name: Task [7-8] Create a network attachment definition and apply
+  hosts: master
+  become: true
+  any_errors_fatal: yes
+  tasks:
+     
+  - name: copy sriov-crd.yaml file 
+    copy:
+        src: /home/commscope/Ansible/Playbooks/SRIOV_Plugin/sriov-crd.yaml
+        dest: /opt/kubernetes/sriov-network-device-plugin/customchanges/sriov-crd.yaml
+                
+  - name: Apply the kubernet sriov-crd.yml
+    shell: kubectl apply -f sriov-crd.yaml
+    args:
+        chdir: /opt/kubernetes/sriov-network-device-plugin/customchanges
+    ignore_errors: true
+    
+          
+  
+    

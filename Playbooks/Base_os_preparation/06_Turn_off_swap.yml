@@ -1,0 +1,11 @@
+---
+- name: Task[1-4] Turn-off swap
+  hosts: all
+  become: true
+  gather_facts : no
+  any_errors_fatal: yes
+  tasks:
+    - name: Turn-off swap
+      shell: 'swapoff -a ; sed -i "s/.* swap /#&/g" /etc/fstab ; free -h'
+
+

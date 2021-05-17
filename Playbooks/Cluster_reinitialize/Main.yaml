@@ -1,0 +1,9 @@
+---
+- import_playbook: ../delete-k8s-config.yml
+#- import_playbook: cluster_reinitialization.yaml
+- import_playbook: ../Kubernetes_Setup/Kubernetes_Main_file.yml
+- import_playbook: ../DANM_Plugin/Damn_Configuration_Main_file.yml
+- import_playbook: ../SRIOV_Plugin/SRIOV_Device_Plugin_Main_file.yml
+- import_playbook: ../NFD/Labeling_Nodes.yml
+- import_playbook: ../Helm_Repo/Helm_Install_Main_file.yml
+- import_playbook: ../Application_bring_up/Application_Pods.yml

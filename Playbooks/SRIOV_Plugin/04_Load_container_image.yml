@@ -1,0 +1,10 @@
+---
+- name: Task[1-5]Load container images copied
+  hosts: all
+  become: true
+  tasks:
+    - name: Load the container Image
+      shell: docker load -i sriov_device_plugin.tgz
+      args: 
+        chdir: /opt/kubernetes/sriov-network-device-plugin/
+      

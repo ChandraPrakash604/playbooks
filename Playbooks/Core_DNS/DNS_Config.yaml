@@ -1,0 +1,21 @@
+---
+- name: Configure core DNS
+  hosts: master
+  become: true
+  tasks: 
+    - name: Creates directory /opt/rancher
+      file:
+        path: /opt/rancher
+        state: directory
+             
+    - name: Get Coredns and Save it to the /opt/rancher/
+      shell: kubectl get -n kube-system cm/coredns -o yaml > /opt/rancher/coredns_cm.yaml
+      
+    - name: Update the resolv.conf with IP
+      replace:
+        path: /opt/rancher/coredns_cm.yaml
+        regexp: "        forward . /etc/resolv.conf {\n           max_concurrent 1000\n        }\n        cache 30\n        loop\n        reload\n        loadbalance\n    }\nkind: ConfigMap"
+        replace: "        forward . 172.17.33.63 {\n           max_concurrent 1000\n        }\n        cache 30\n        loop\n        reload\n        loadbalance\n    }\n    commscope.com:53 {\n        errors\n        cache 30\n        forward . 10.53.159.22\n    }\n    arrisi.com:53 {\n        errors\n        cache 30\n        forward . 10.53.159.22\n    }\nkind: ConfigMap"
+      
+    - name: Replace the updated coredns file 
+      shell: kubectl replace -n kube-system -f /opt/rancher/coredns_cm.yaml

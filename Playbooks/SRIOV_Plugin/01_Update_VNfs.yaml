@@ -1,0 +1,9 @@
+---
+- name: Task [7-2] Update SRIOV VNF
+  hosts: all
+  become: true
+  gather_facts: no
+  any_errors_fatal: yes
+  tasks:
+    - name: Update the content  /sys/class/net/enp101s0f1/device/sriov_numvfs
+      shell: echo 16 > /sys/class/net/enp101s0f1/device/sriov_numvfs

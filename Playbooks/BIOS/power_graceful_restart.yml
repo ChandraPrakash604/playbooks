@@ -1,0 +1,25 @@
+---
+- hosts: localhost
+  connection: local
+  name: Manage System Power - Greaceful restart
+  gather_facts: False
+
+  tasks:
+
+  - name: Restart system power gracefully
+    redfish_command:
+      category: Systems
+      command: PowerReboot
+      baseuri: "{{ iDRAC_ip }}"
+      username: "{{ iDRAC_user }}"
+      password: "{{ iDRAC_password }}"
+
+  - name: Wait for port 22 to become open on the host
+    wait_for:
+        host: "{{ server_ip }}"
+        port: 22
+        delay: 30
+        connect_timeout: 5
+        timeout: 500
+    register: result
+    failed_when: result.elapsed < 20

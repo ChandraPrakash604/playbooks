@@ -1,0 +1,16 @@
+---
+- name: copy the file from master to worker
+  hosts: worker
+  gather_facts : no
+  tasks:
+    - name: Creates Directory customchange
+      file:
+        path: /opt/kubernetes/customchange
+        state: directory
+              
+    - name: Copy Remote-To-Remote (from Master to Worker)
+      synchronize:
+        src: /opt/kubernetes/customchange/
+        dest: /opt/kubernetes/customchange/
+        recursive: yes
+      delegate_to: host1

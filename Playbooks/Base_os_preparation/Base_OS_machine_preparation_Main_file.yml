@@ -1,0 +1,22 @@
+---
+
+#- import_playbook: 01_DNS_File_update.yml
+#- import_playbook: 02_Updating_Host_file.yml
+#- import_playbook: 03_Copying_stern_And_bashrc.yml
+#- import_playbook: 04_Disable_firewall.yml
+#- import_playbook: 05_Disable_SELinux.yml
+#- import_playbook: 06_Turn_off_swap.yml
+#- import_playbook: 07_Enable_overlay_kernel_module.yml 
+#- import_playbook: 08_Enable_IP_forwarding.yml
+#- import_playbook: 09_Install_and_update_repo.yml
+#- import_playbook: 10_Install_Kernal_devel_and_RT_kernal.yml
+#- import_playbook: 11_RT_virtual_host_config_update.yml
+#- import_playbook: 12_Install_basic_and_development_tools.yml
+#- import_playbook: 13_Enable_NTP.yml
+#- import_playbook: 14_Installing_GCC492.yml
+#- import_playbook: 15_Verify_GCC_version.yml
+#- import_playbook: 16_Mellanox_OFED_installation.yml
+- import_playbook: 17_DPDK_installation.yml
+
+
+

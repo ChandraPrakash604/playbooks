@@ -1,0 +1,31 @@
+---
+- name: Bringup gNB Application PODs
+  hosts: master
+  become: true
+  gather_facts: no
+  any_errors_fatal: yes
+  tasks:
+    - name: Update the Helm Repo
+      shell: helm repo update
+      
+    - name: CU-CP-Pod installation
+      shell: helm install cu-cp-pod oc5g-helm-prod-suwanee/cs-gnb-cu-cp --version 0.1.0-siqbuild.5.0.0.26
+    
+    - name: Sleep for 2 min to bring up PODs
+      pause: 
+        minutes: 2
+        
+    - name: CU-UP-POD  installation
+      shell: helm install cu-up-pod oc5g-helm-prod-suwanee/cs-gnb-cu-up --version 0.1.0-siqbuild.5.0.0.26
+        
+    - name: DU-POD-installation
+      shell: helm install du-pod  oc5g-helm-prod-suwanee/cs-gnb-du --version 0.1.0-siqbuild.5.0.0.26
+    
+    - name: l3uesim-Pod-installation
+      shell: helm install l3uesim-pod oc5g-helm-prod-suwanee/cs-gnb-l3uesim --version 0.1.0-siqbuild.5.0.0.26
+      
+    - name: dltg-POD-installation
+      shell: helm install dltg-pod oc5g-helm-prod-suwanee/cs-gnb-dltg --version 0.1.0-siqbuild.5.0.0.26
+      
+    - name: ultg-POD-installation
+      shell: helm install ultg-pod oc5g-helm-prod-suwanee/cs-gnb-ultg --version 0.1.0-siqbuild.5.0.0.26

@@ -1,0 +1,8 @@
+---
+- name: Base OS preparation
+  hosts: servers
+  become: true
+  tasks:
+    - name: Reboot_server
+      reboot:
+ 

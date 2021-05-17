@@ -1,0 +1,97 @@
+{
+    "changed": false,
+    "failed": false,
+    "redfish_facts": {
+        "bios_attribute": {
+            "entries": [],
+            "ret": false
+        },
+        "health_report": {
+            "entries": [
+                [
+                    {
+                        "system_uri": "/redfish/v1/Systems/1"
+                    },
+                    {
+                        "EthernetInterfaces": [
+                            {
+                                "Status": {
+                                    "Health": "OK",
+                                    "State": "Disabled"
+                                },
+                                "ethernetinterface_uri": "/redfish/v1/Systems/1/EthernetInterfaces/1"
+                            },
+                            {
+                                "Status": {
+                                    "Health": "OK",
+                                    "State": "Disabled"
+                                },
+                                "ethernetinterface_uri": "/redfish/v1/Systems/1/EthernetInterfaces/2"
+                            },
+                            {
+                                "Status": {
+                                    "Health": "OK",
+                                    "State": "Disabled"
+                                },
+                                "ethernetinterface_uri": "/redfish/v1/Systems/1/EthernetInterfaces/3"
+                            },
+                            {
+                                "Status": {
+                                    "Health": "OK",
+                                    "State": "Disabled"
+                                },
+                                "ethernetinterface_uri": "/redfish/v1/Systems/1/EthernetInterfaces/4"
+                            }
+                        ],
+                        "Memory": [
+                            {
+                                "Status": {
+                                    "Health": "OK",
+                                    "State": "Enabled"
+                                },
+                                "memory_uri": "/redfish/v1/Systems/1/Memory/1"
+                            },
+                            {
+                                "Status": {
+                                    "Health": "OK",
+                                    "State": "Enabled"
+                                },
+                                "memory_uri": "/redfish/v1/Systems/1/Memory/2"
+                            },
+                            {
+                                "Status": {
+                                    "Health": "OK",
+                                    "State": "Enabled"
+                                },
+                                "memory_uri": "/redfish/v1/Systems/1/Memory/3"
+                            },
+                            {
+                                "Status": {
+                                    "Health": "OK",
+                                    "State": "Enabled"
+                                },
+                                "memory_uri": "/redfish/v1/Systems/1/Memory/4"
+                            }
+                        ],
+                        "Processors": [
+                            {
+                                "Status": {
+                                    "Health": "OK",
+                                    "State": "Enabled"
+                                },
+                                "processor_uri": "/redfish/v1/Systems/1/Processors/1"
+                            }
+                        ],
+                        "System": {
+                            "Status": {
+                                "Health": "Critical",
+                                "State": "Enabled"
+                            }
+                        }
+                    }
+                ]
+            ],
+            "ret": true
+        }
+    }
+}

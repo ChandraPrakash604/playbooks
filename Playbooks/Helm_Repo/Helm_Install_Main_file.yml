@@ -1,0 +1,3 @@
+---
+- import_playbook: 01_Download_binary.yaml
+- import_playbook: 02_Add_official_Helm_Charts.yaml

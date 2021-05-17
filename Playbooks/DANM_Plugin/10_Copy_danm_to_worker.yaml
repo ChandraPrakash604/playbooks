@@ -1,0 +1,11 @@
+---
+- name: copy the danm file from master to worker
+  hosts: worker
+  gather_facts : yes
+  tasks:
+    - name: Copy Remote-To-Remote (from Master to Worker)
+      synchronize:
+        src: /etc/kubernetes/kubeconfig/danmc.yml
+        dest: /etc/kubernetes/kubeconfig/
+        recursive: yes
+      delegate_to: host1

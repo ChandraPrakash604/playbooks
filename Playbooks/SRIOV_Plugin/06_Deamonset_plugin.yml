@@ -1,0 +1,26 @@
+---
+- name: Build SRIOV network device plugin
+  hosts: master
+  become: true
+  any_errors_fatal: yes
+  tasks:
+    - name: copy the sriovdp-daemonset.yaml
+      copy:
+        src: /opt/kubernetes/sriov-network-device-plugin/deployments/k8s-v1.16/sriovdp-daemonset.yaml
+        dest: /opt/kubernetes/sriov-network-device-plugin/customchanges/
+        remote_src: yes
+        
+    - name: Replace the file content 
+      replace:
+        path: /opt/kubernetes/sriov-network-device-plugin/customchanges/sriovdp-daemonset.yaml
+        regexp: 'image: nfvpe/sriov-device-plugin:v3.2'
+        replace: 'image: nfvpe/sriov-device-plugin:latest'
+        
+    - name: create kubernets 
+      shell: kubectl create -f sriovdp-daemonset.yaml
+      args: 
+        chdir: /opt/kubernetes/sriov-network-device-plugin/customchanges/
+      ignore_errors: true
+      
+       
+      

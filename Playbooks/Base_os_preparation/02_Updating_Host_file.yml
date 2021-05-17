@@ -1,0 +1,23 @@
+---
+- name: Updating the HostFile
+  hosts: all
+  become: true
+  gather_facts: no
+  any_errors_fatal: yes
+  tasks:
+    - name: Check the contents of the file
+      shell: cat /etc/hosts
+      register: host_file_out
+      
+    - debug:
+        msg: "{{ host_file_out.stdout_lines }}"
+        
+    - name: add the "5gl2devrepo" into the file
+      lineinfile:
+         path: /etc/hosts
+         line: 10.206.1.205  5gl2devrepo
+      when: '"5gl2devrepo" not in  host_file_out.stdout'
+        
+        
+        
+        

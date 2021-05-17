@@ -1,0 +1,8 @@
+---
+- import_playbook: 01-Install_RancherCLI.yaml
+- import_playbook: 02-Rancher_Login.yaml
+- import_playbook: 03-Cluster_Import_Install_Logger.yaml
+#- import_playbook: 04-Adding_Secret.yaml
+#- import_playbook: 05-Cluster_Output.yaml
+#- import_playbook: 06-Cluster_Flow.yaml
+#- import_playbook: 07-Log_Generator.yaml

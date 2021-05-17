@@ -1,0 +1,42 @@
+---
+- name: MM configaration  
+  hosts: master
+  become: true
+  gather_facts: no
+  any_errors_fatal: yes\
+  vars:
+    ansible_python_interpreter: '{{ ansible_playbook_python }}' 
+  tasks:
+    - name: Getting the Pod name
+      shell: kubectl get pods | grep cu-cp
+      register: cucp_output
+    - debug:
+        msg: "{{cucp_output.stdout_lines[0].split()[0]}}"
+#    - python_requirements_info:
+#        dependencies:
+#          - openshift
+#          - requests
+    - name: Executing the command
+#      debug:
+#        msg: kubectl exec -it {{cucp_output.stdout_lines[0].split()[0]}} -c gnb-cucp-cm  -- /bin/bash
+      community.kubernetes.k8s_exec:
+        namespace: default
+        pod: "{{cucp_output.stdout_lines[0].split()[0]}}"    
+        container: gnb-cucp-cm
+        command: ls
+        validate_certs: no
+        kubeconfig: "~/.kube/config"
+        
+      register: command_status
+    - name: Check last command status
+      debug:
+        msg: "cmd failed"
+      when: command_status.return_code != 0
+      
+        
+
+      
+        
+        
+        
+      

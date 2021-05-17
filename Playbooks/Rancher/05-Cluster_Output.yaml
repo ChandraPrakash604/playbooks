@@ -1,0 +1,32 @@
+---
+- name: ClusterOutput
+  hosts: master
+  become: true
+  tasks:
+    - name:  Create logging Cluster Output file
+      blockinfile:
+        path: /opt/rancher/logging_clusteroutput.yaml
+        create: yes
+        block: | 
+            apiVersion: logging.banzaicloud.io/v1beta1
+            kind: ClusterOutput
+            metadata:
+                name: es-cluster-output
+            spec:
+                elasticsearch:
+                    host: 10.193.104.46
+                    index_name: gnb-logs-cluster-{{ clusterName }}
+                    password:
+                        valueFrom:
+                            secretKeyRef:
+                               key: password
+                               name: elastic-cli
+                    port: 9201
+                    scheme: http
+                    user: elastic
+              
+    - name: Applying the Cluster output file
+      shell: kubectl -n cattle-logging-system apply -f /opt/rancher/logging_clusteroutput.yaml
+      args:
+        chdir: /opt/rancher/
+      ignore_errors: True

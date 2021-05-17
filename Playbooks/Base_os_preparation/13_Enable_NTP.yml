@@ -1,0 +1,27 @@
+---
+-  name: Task [1-16] Enable NTP on Host
+   hosts: all
+   become: true
+   gather_facts: no
+   any_errors_fatal: yes
+   tasks:
+     - name: Set the Timezone to Asia/Kolkata
+       command: timedatectl set-timezone Asia/Kolkata
+    
+     - name: Install chrony package
+       yum:
+         name: chrony
+         state: present
+     
+     - name: Enable Chrony serice
+       service:
+         name: chronyd
+         enabled: yes
+     
+     - name: Start service Chrony
+       service:
+         name: chronyd
+         state: started
+    
+     - name: Enable Automatic clock synchronization with NTP server
+       command: timedatectl set-ntp 1

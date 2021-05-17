@@ -1,0 +1,12 @@
+---
+- name: Run Sample Docker Hello-world
+  hosts: all
+  become: true
+  gather_facts: no
+  any_errors_fatal: yes
+  tasks: 
+    - name: Login into Docker 
+      shell: docker login --username onecellansible --password Commscope123
+      
+    - name: Running Docker Hello world
+      command: "docker run hello-world"

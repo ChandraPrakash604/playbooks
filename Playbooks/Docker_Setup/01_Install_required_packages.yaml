@@ -1,0 +1,16 @@
+---
+- name: Install Docker Prerequisite packages
+  hosts: all
+  become: true
+  gather_facts: no
+  any_errors_fatal: yes
+  tasks:      
+    - name: Installing Docker Prerequisite packages
+      yum:
+        name: '{{ packages }}'
+      vars:
+        packages:
+          - wget
+          - yum-utils
+          - device-mapper-persistent-data
+          - lvm2

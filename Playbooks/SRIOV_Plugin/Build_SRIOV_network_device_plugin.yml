@@ -1,0 +1,23 @@
+---
+- name: Build SRIOV network device plugin
+  hosts: master
+  become: true
+  tasks:
+    - name: Download and Unarchive
+      unarchive:
+        src: http://10.206.1.205/5G_Softwares/CentOS/TargetServer/Source/sriov-network-device-plugin.tgz
+        dest: /opt/kubernetes
+        remote_src: yes
+        
+    - name: Remove the tgz file
+      file:
+        path: /opt/kubernetes/sriov-network-device-plugin.tgz
+        state: absent
+    - name: Make an image
+      shell: make image
+      args:
+        chdir: /opt/kubernetes/sriov-network-device-plugin
+       
+    
+    - name: Save into docker image
+      shell: docker save -o sriov-device-plugin.tar.gz nfvpe/sriov-device-plugin:latest

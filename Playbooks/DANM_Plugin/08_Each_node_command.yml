@@ -1,0 +1,16 @@
+---
+- name: Run Code on Each Node
+  hosts: all
+  become: true
+  tasks: 
+    - name: json command
+      shell: "jq -M '{ name: .name, cniVersion: \"0.3.1\" } + .plugins[0]' /etc/cni/net.d/10-calico.conflist > /etc/cni/net.d/calico.conf"     
+    
+      
+    - name: move /etc/cni/net.d/10-calico.conflist /etc/cni/net.d/10-calico.conflist.bk
+      command: mv /etc/cni/net.d/10-calico.conflist /etc/cni/net.d/10-calico.conflist.bk
+      
+    - name: Creates Directory /etc/kubernetes/kubeconfig
+      file:
+        path: /etc/kubernetes/kubeconfig
+        state: directory

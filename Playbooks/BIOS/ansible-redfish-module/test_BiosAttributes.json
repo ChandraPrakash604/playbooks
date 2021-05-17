@@ -1,0 +1,354 @@
+{
+    "changed": false,
+    "failed": false,
+    "redfish_facts": {
+        "bios_attribute": {
+            "entries": [],
+            "ret": false
+        },
+        "boot_order": {
+            "entries": [],
+            "ret": false
+        },
+        "boot_override": {
+            "entries": [
+                [
+                    {
+                        "system_uri": "/redfish/v1/Systems/1"
+                    },
+                    {
+                        "BootSourceOverrideEnabled": "Disabled",
+                        "BootSourceOverrideMode": "Legacy",
+                        "BootSourceOverrideTarget": "None",
+                        "BootSourceOverrideTarget@Redfish.AllowableValues": [
+                            "None",
+                            "Pxe",
+                            "Floppy",
+                            "Cd",
+                            "Usb",
+                            "Hdd",
+                            "BiosSetup"
+                        ]
+                    }
+                ]
+            ],
+            "ret": true
+        },
+        "cpu": {
+            "entries": [
+                [
+                    {
+                        "system_uri": "/redfish/v1/Systems/1"
+                    },
+                    [
+                        {
+                            "Id": "1",
+                            "Manufacturer": "Intel(R) Corporation",
+                            "MaxSpeedMHz": 4500,
+                            "Model": "Intel(R) Xeon(R) Gold 6212U CPU @ 2.40GHz",
+                            "Status": {
+                                "Health": "OK",
+                                "State": "Enabled"
+                            },
+                            "TotalCores": 24,
+                            "TotalThreads": 24
+                        }
+                    ]
+                ]
+            ],
+            "ret": true
+        },
+        "disk": {
+            "entries": [
+                [
+                    {
+                        "system_uri": "/redfish/v1/Systems/1"
+                    },
+                    []
+                ]
+            ],
+            "ret": true
+        },
+        "health_report": {
+            "entries": [
+                [
+                    {
+                        "system_uri": "/redfish/v1/Systems/1"
+                    },
+                    {
+                        "EthernetInterfaces": [
+                            {
+                                "Status": {
+                                    "Health": "OK",
+                                    "State": "Disabled"
+                                },
+                                "ethernetinterface_uri": "/redfish/v1/Systems/1/EthernetInterfaces/1"
+                            },
+                            {
+                                "Status": {
+                                    "Health": "OK",
+                                    "State": "Disabled"
+                                },
+                                "ethernetinterface_uri": "/redfish/v1/Systems/1/EthernetInterfaces/2"
+                            },
+                            {
+                                "Status": {
+                                    "Health": "OK",
+                                    "State": "Disabled"
+                                },
+                                "ethernetinterface_uri": "/redfish/v1/Systems/1/EthernetInterfaces/3"
+                            },
+                            {
+                                "Status": {
+                                    "Health": "OK",
+                                    "State": "Disabled"
+                                },
+                                "ethernetinterface_uri": "/redfish/v1/Systems/1/EthernetInterfaces/4"
+                            }
+                        ],
+                        "Memory": [
+                            {
+                                "Status": {
+                                    "Health": "OK",
+                                    "State": "Enabled"
+                                },
+                                "memory_uri": "/redfish/v1/Systems/1/Memory/1"
+                            },
+                            {
+                                "Status": {
+                                    "Health": "OK",
+                                    "State": "Enabled"
+                                },
+                                "memory_uri": "/redfish/v1/Systems/1/Memory/2"
+                            },
+                            {
+                                "Status": {
+                                    "Health": "OK",
+                                    "State": "Enabled"
+                                },
+                                "memory_uri": "/redfish/v1/Systems/1/Memory/3"
+                            },
+                            {
+                                "Status": {
+                                    "Health": "OK",
+                                    "State": "Enabled"
+                                },
+                                "memory_uri": "/redfish/v1/Systems/1/Memory/4"
+                            }
+                        ],
+                        "Processors": [
+                            {
+                                "Status": {
+                                    "Health": "OK",
+                                    "State": "Enabled"
+                                },
+                                "processor_uri": "/redfish/v1/Systems/1/Processors/1"
+                            }
+                        ],
+                        "System": {
+                            "Status": {
+                                "Health": "Critical",
+                                "State": "Enabled"
+                            }
+                        }
+                    }
+                ]
+            ],
+            "ret": true
+        },
+        "memory": {
+            "entries": [
+                [
+                    {
+                        "system_uri": "/redfish/v1/Systems/1"
+                    },
+                    [
+                        {
+                            "CapacityMiB": 32768,
+                            "Manufacturer": "Samsung",
+                            "MemoryDeviceType": "DDR4",
+                            "MemoryLocation": {
+                                "Channel": 0,
+                                "MemoryController": 0,
+                                "Slot": 0,
+                                "Socket": 0
+                            },
+                            "Name": "DIMMA1",
+                            "PartNumber": "M393A4K40CB2-CTD",
+                            "RankCount": 1,
+                            "SerialNumber": "23A9BE81",
+                            "Status": {
+                                "Health": "OK",
+                                "State": "Enabled"
+                            }
+                        },
+                        {
+                            "CapacityMiB": 32768,
+                            "Manufacturer": "Samsung",
+                            "MemoryDeviceType": "DDR4",
+                            "MemoryLocation": {
+                                "Channel": 1,
+                                "MemoryController": 0,
+                                "Slot": 0,
+                                "Socket": 0
+                            },
+                            "Name": "DIMMB1",
+                            "PartNumber": "M393A4K40CB2-CTD",
+                            "RankCount": 2,
+                            "SerialNumber": "23A9BECE",
+                            "Status": {
+                                "Health": "OK",
+                                "State": "Enabled"
+                            }
+                        },
+                        {
+                            "CapacityMiB": 16384,
+                            "Manufacturer": "Micron Technology",
+                            "MemoryDeviceType": "DDR4",
+                            "MemoryLocation": {
+                                "Channel": 0,
+                                "MemoryController": 1,
+                                "Slot": 0,
+                                "Socket": 0
+                            },
+                            "Name": "DIMMD1",
+                            "PartNumber": "18ASF2G72PDZ-2G9E1",
+                            "RankCount": 3,
+                            "SerialNumber": "F11ED9B4",
+                            "Status": {
+                                "Health": "OK",
+                                "State": "Enabled"
+                            }
+                        },
+                        {
+                            "CapacityMiB": 16384,
+                            "Manufacturer": "Micron Technology",
+                            "MemoryDeviceType": "DDR4",
+                            "MemoryLocation": {
+                                "Channel": 1,
+                                "MemoryController": 1,
+                                "Slot": 0,
+                                "Socket": 0
+                            },
+                            "Name": "DIMME1",
+                            "PartNumber": "18ASF2G72PDZ-2G9E1",
+                            "RankCount": 4,
+                            "SerialNumber": "F11ED9B3",
+                            "Status": {
+                                "Health": "OK",
+                                "State": "Enabled"
+                            }
+                        }
+                    ]
+                ]
+            ],
+            "ret": true
+        },
+        "nic": {
+            "entries": [
+                [
+                    {
+                        "resource_uri": "/redfish/v1/Systems/1"
+                    },
+                    [
+                        {
+                            "Description": "OnBoard #1",
+                            "FQDN": "",
+                            "MACAddress": "3c:ec:ef:1a:6e:96",
+                            "SpeedMbps": 0,
+                            "Status": {
+                                "Health": "OK",
+                                "State": "Disabled"
+                            }
+                        },
+                        {
+                            "Description": "OnBoard #2",
+                            "FQDN": "",
+                            "MACAddress": "3c:ec:ef:1a:6e:97",
+                            "SpeedMbps": 0,
+                            "Status": {
+                                "Health": "OK",
+                                "State": "Disabled"
+                            }
+                        },
+                        {
+                            "Description": "AOC-S100G-m2C #1",
+                            "FQDN": "",
+                            "MACAddress": "ac:1f:6b:cf:20:86",
+                            "SpeedMbps": 0,
+                            "Status": {
+                                "Health": "OK",
+                                "State": "Disabled"
+                            }
+                        },
+                        {
+                            "Description": "AOC-S100G-m2C #2",
+                            "FQDN": "",
+                            "MACAddress": "ac:1f:6b:cf:20:87",
+                            "SpeedMbps": 0,
+                            "Status": {
+                                "Health": "OK",
+                                "State": "Disabled"
+                            }
+                        }
+                    ]
+                ]
+            ],
+            "ret": true
+        },
+        "storage_controller": {
+            "entries": [],
+            "ret": false
+        },
+        "system": {
+            "entries": [
+                [
+                    {
+                        "system_uri": "/redfish/v1/Systems/1"
+                    },
+                    {
+                        "BiosVersion": "3.3",
+                        "Manufacturer": "Supermicro",
+                        "MemorySummary": {
+                            "Status": {
+                                "Health": "OK",
+                                "State": "Enabled"
+                            },
+                            "TotalSystemMemoryGiB": 96
+                        },
+                        "Model": "SYS-1019P-FHN2T",
+                        "PartNumber": "SYS-1019P-FHN2T",
+                        "PowerState": "On",
+                        "ProcessorSummary": {
+                            "Count": 1,
+                            "Model": "Intel(R) Xeon(R) processor",
+                            "Status": {
+                                "Health": "OK",
+                                "State": "Enabled"
+                            }
+                        },
+                        "SKU": "To be filled by O.E.M.",
+                        "SerialNumber": "S383764X0823413",
+                        "Status": {
+                            "Health": "Critical",
+                            "State": "Enabled"
+                        },
+                        "SystemType": "Physical"
+                    }
+                ]
+            ],
+            "ret": true
+        },
+        "volume": {
+            "entries": [
+                [
+                    {
+                        "system_uri": "/redfish/v1/Systems/1"
+                    },
+                    []
+                ]
+            ],
+            "ret": true
+        }
+    }
+}

@@ -1,0 +1,20 @@
+---
+- name: Create User
+  hosts: localhost
+  become: true
+  tasks:      
+    - group: 
+        name: sudo
+        state: present
+    - name: Add deployer user and add it to sudo
+        user: 
+        name: sunil
+        password: 'sunil'
+        state: present
+        createhome: yes
+      become: yes
+      become_method: "sudo"
+      
+    - command: "usermod -aG wheel username"
+    
+    

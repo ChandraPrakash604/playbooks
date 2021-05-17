@@ -1,0 +1,34 @@
+---
+- hosts: localhost
+  connection: local
+  name: Get BIOS attributes
+  gather_facts: False
+
+  vars:
+    datatype: BiosAttributes
+
+  tasks:
+  - name: Define file to place results
+    set_fact: template=test_{{datatype}}_System_getBIOS
+
+  - name: Create dropoff directory for host
+    file:
+      path: ../results
+      state: directory
+
+  - name: Get BIOS attributes
+    community.general.redfish_info:
+      category: Systems
+      command: Embedded
+      baseuri: 10.207.240.94
+      username: ADMIN
+      password: Commscope123!
+    register: result
+  
+  - debug:
+      msg: "{{result}}"
+
+  - name: Copy results to output file
+    copy:
+      content: "{{ result | to_nice_json }}"
+      dest: "{{ template }}.json"

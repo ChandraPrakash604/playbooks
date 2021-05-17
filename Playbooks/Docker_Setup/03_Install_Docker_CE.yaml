@@ -1,0 +1,17 @@
+---
+- name: Install docker-ce-19.03.14-3.el7
+  hosts: all
+  become: true
+  gather_facts: no
+  any_errors_fatal: yes
+  tasks:  
+    - name: Installing Docker CE Version docker-ce-19.03.14-3.el7
+      yum:
+        name: '{{ packages }}'
+        disable_gpg_check: yes
+      vars:
+        packages:
+          - docker-ce-19.03.14-3.el7
+          - docker-ce-cli-19.03.14-3.el7
+          - containerd.io    
+  

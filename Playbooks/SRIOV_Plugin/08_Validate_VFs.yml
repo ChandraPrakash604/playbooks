@@ -1,0 +1,45 @@
+- hosts: master
+  become: yes
+  gather_facts: no
+  any_errors_fatal: yes
+  tasks:
+    - name: Get nodes
+      shell: kubectl get nodes
+      register: nodes_output
+    - debug:
+        msg: "{{ nodes_output.stdout_lines}}"
+        
+    - name: Set the number of nodes
+      set_fact:
+        no_nodes: '{{nodes_output.stdout_lines | length}}'
+        
+    - name: Setting master node name
+      set_fact:
+        masternode: "{{ nodes_output.stdout_lines[1].split()[0]}}"
+        
+    - name: Get the number of VFs
+      shell: kubectl get node "{{masternode}}" -o json | jq '.status.allocatable'
+      register: master_Vfs_out
+      
+    - debug:
+        msg: "{{ master_Vfs_out.stdout_lines}}"
+      
+    
+    - block:
+        
+       - name: Setting worker node name
+         set_fact:
+           workernode: "{{ nodes_output.stdout_lines[2].split()[0]}}"
+           
+       - name: Get the number of VFs
+         shell: kubectl get node "{{workernode}}" -o json | jq '.status.allocatable'
+         register: worker_Vfs_out
+      
+       - debug:
+           msg: "{{ worker_Vfs_out.stdout_lines }}"
+           
+       
+      when: 'no_nodes|int > 2'
+    
+    
+    

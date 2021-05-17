@@ -1,0 +1,177 @@
+apiVersion: "danm.k8s.io/v1"
+kind: ClusterNetwork
+metadata:
+  name: sriov-x2c
+spec:
+  NetworkID: sriov-x2c
+  NetworkType: sriov
+  Options:
+    device_pool: "commscope.com/sriov_netdevice"
+    cidr: 10.207.195.1/24
+    allocation_pool:
+      start: 10.207.195.96
+      end: 10.207.195.100
+    net6: 2001:25:207:195::/64
+    allocation_pool_v6:
+      start: 2001:25:207:195::96
+      end: 2001:25:207:195::100
+    container_prefix: netx2c
+    rt_tables: 26
+    vlan: 661
+---
+apiVersion: "danm.k8s.io/v1"
+kind: ClusterNetwork
+metadata:
+  name: sriov-f1c
+spec:
+  NetworkID: sriov-f1c
+  NetworkType: sriov
+  Options:
+    device_pool: "commscope.com/sriov_netdevice"
+    cidr: 192.168.12.1/24
+    allocation_pool:
+      start: 192.168.12.1
+      end: 192.168.12.10
+    net6: 2001:4000:00aa:000c::/64
+    allocation_pool_v6:
+      start: 2001:4000:00aa:000c::1
+      end: 2001:4000:00aa:000c::a
+    container_prefix: netf1c
+    vlan: 12
+---
+apiVersion: "danm.k8s.io/v1"
+kind: ClusterNetwork
+metadata:
+  name: sriov-e1c
+spec:
+  NetworkID: sriov-e1c
+  NetworkType: sriov
+  Options:
+    device_pool: "commscope.com/sriov_netdevice"
+    cidr: 192.168.14.1/24
+    allocation_pool:
+      start: 192.168.14.1
+      end: 192.168.14.10
+    net6: 2001:4000:00aa:000e::/64
+    allocation_pool_v6:
+      start: 2001:4000:00aa:000e::1
+      end: 2001:4000:00aa:000e::a
+    container_prefix: nete1c
+    vlan: 14
+---
+apiVersion: "danm.k8s.io/v1"
+kind: ClusterNetwork
+metadata:
+  name: sriov-sim
+spec:
+  NetworkID: sriov-sim
+  NetworkType: sriov
+  Options:
+    device_pool: "commscope.com/sriov_netdevice"
+    cidr: 192.168.114.1/24
+    allocation_pool:
+      start: 192.168.114.1
+      end: 192.168.114.10
+    container_prefix: netsim
+---
+apiVersion: "danm.k8s.io/v1"
+kind: ClusterNetwork
+metadata:
+  name: sriov-o1c
+spec:
+  NetworkID: sriov-o1c
+  NetworkType: sriov
+  Options:
+    device_pool: "commscope.com/sriov_netdevice"
+    cidr: 10.207.196.1/24
+    allocation_pool:
+      start: 10.207.196.96
+      end: 10.207.196.100
+    net6: 2001:25:207:196::/64
+    allocation_pool_v6:
+      start: 2001:25:207:196::96
+      end: 2001:25:207:196::100
+    container_prefix: neto1c
+    rt_tables: 27
+    vlan: 662
+---
+apiVersion: "danm.k8s.io/v1"
+kind: ClusterNetwork
+metadata:
+  name: sriov-dpdk
+spec:
+  NetworkID: sriov-dpdk
+  NetworkType: sriov
+  Options:
+    device_pool: "commscope.com/sriov_netdevice"
+    cidr: 192.168.13.1/24
+    allocation_pool:
+      start: 192.168.13.1
+      end: 192.168.13.10
+    net6: 2001:4000:00aa:000d::/64
+    allocation_pool_v6:
+      start: 2001:4000:00aa:000d::1
+      end: 2001:4000:00aa:000d::a
+    container_prefix: netdpdk
+    vlan: 13
+---
+apiVersion: "danm.k8s.io/v1"
+kind: ClusterNetwork
+metadata:
+  name: sriov-oranm
+spec:
+  NetworkID: sriovoranm
+  NetworkType: sriov
+  Options:
+    device_pool: "commscope.com/sriov_netdevice"
+    cidr: 192.168.66.1/24
+    allocation_pool:
+      start: 192.168.66.50
+      end: 192.168.66.59
+    net6: fdfc:6d42:51d6:1704::/64
+    allocation_pool_v6:
+      start: fdfc:6d42:51d6:1704::0001
+      end: fdfc:6d42:51d6:1704::000a
+    container_prefix: netoranm
+    vlan: 11
+---
+apiVersion: "danm.k8s.io/v1"
+kind: ClusterNetwork
+metadata:
+  name: sriov-oranc
+spec:
+  NetworkID: sriovoranc
+  NetworkType: sriov
+  Options:
+    device_pool: "commscope.com/sriov_netdevice"
+    cidr: 192.168.67.1/24
+    allocation_pool:
+      start: 192.168.67.50
+      end: 192.168.67.59
+    net6: fdbb:662a:4391:30c7::/64
+    allocation_pool_v6:
+      start: fdbb:662a:4391:30c7::0001
+      end: fdbb:662a:4391:30c7::000a
+    container_prefix: netoranc
+    vlan: 19
+---
+apiVersion: "danm.k8s.io/v1"
+kind: ClusterNetwork
+metadata:
+  name: sriov-oranu
+spec:
+  NetworkID: sriovoranu
+  NetworkType: sriov
+  Options:
+    device_pool: "commscope.com/sriov_netdevice"
+    cidr: 192.168.68.1/24
+    allocation_pool:
+      start: 192.168.68.50
+      end: 192.168.68.59
+    container_prefix: netoranu
+    net6: fdb9:b473:838f:907e::/64
+    allocation_pool_v6:
+      start: fdb9:b473:838f:907e::0001
+      end: fdb9:b473:838f:907e::000a
+    container_prefix: netoranu
+    vlan: 20

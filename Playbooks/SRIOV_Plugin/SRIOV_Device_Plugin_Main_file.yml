@@ -1,0 +1,9 @@
+---
+#- import_playbook: 01_Update_VNfs.yaml
+#- import_playbook: 02_Build_SRIOV_CNI.yml
+#- import_playbook: 03_Copy_SRIOV_device_plugin_file.yml
+#- import_playbook: 04_Load_container_image.yml
+- import_playbook: Create_configMap_file.yml  
+- import_playbook: 06_Deamonset_plugin.yml
+- import_playbook: 07_Create_network_attahment_definition.yml  
+- import_playbook: 08_Validate_VFs.yml

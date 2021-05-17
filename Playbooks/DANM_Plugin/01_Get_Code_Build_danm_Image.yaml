@@ -1,0 +1,26 @@
+---
+- name: DANM Get Code and Build Docker Image
+  hosts: master
+  become: true
+  any_errors_fatal: yes
+  tasks:
+    - name: Creates Directory /opt/kubernetes
+      file:
+        path: /opt/kubernetes
+        state: directory
+        
+    - name: Go to the Directory /opt/kubernetes
+      command: chdir=/opt/kubernetes ls
+    
+    - name: Download and Unarchive a danm.tgz file
+      ansible.builtin.unarchive:
+        src: http://10.206.1.205/5G_Softwares/CentOS/TargetServer/Source/danm.tgz
+        dest: /opt/kubernetes
+        remote_src: yes
+    
+    - name: Remove the danm.tgz file
+      file:
+        path: /opt/kubernetes/danm.tgz
+        state: absent
+    
+    

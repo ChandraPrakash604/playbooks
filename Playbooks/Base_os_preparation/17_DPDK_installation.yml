@@ -1,0 +1,104 @@
+---
+- name: Task[1- 21 ] DPDK installation
+  hosts: all
+  become: true
+  gather_facts: yes
+  any_errors_fatal: yes
+  
+  tasks:
+    - name: Copying the required file from controller machine
+      copy: 
+        src: "{{ item }}"
+        dest: /opt     
+      with_fileglob:
+        - /home/commscope/Ansible/Repository/nasm-2.14.02.tar.xz
+        - /home/commscope/Ansible/Repository/v0.54.zip
+        - /home/commscope/Ansible/Repository/dpdk-19.11.tar.xz
+        - /home/commscope/Ansible/Repository/dpdk-19.11-patch.tgz
+        
+    - name: Unarchive the Nasm file
+      ansible.builtin.unarchive:
+        src: /opt/nasm-2.14.02.tar.xz
+        dest: /opt
+        remote_src: yes
+      register: Nasm_unarchive
+        
+    - name: Running the nasm script
+      shell: |
+        sh autogen.sh
+        sh configure prefix=/usr
+        make && make install
+      args:
+       chdir: /opt/nasm-2.14.02
+      when: Nasm_unarchive.changed
+        
+    - name: Unarchive the zip file for Intel(R) Multi-Buffer Crypto for IPSec version 54
+      ansible.builtin.unarchive:
+        src: /opt/v0.54.zip
+        dest: /opt
+        remote_src: yes  
+      register: Intel_unzip    
+        
+      
+    - name: Running the Intel(R) Multi-Buffer Crypto for IPSec version 54
+      shell: |
+        make
+        make install
+      args:
+        chdir: /opt/intel-ipsec-mb-0.54  
+      when: Intel_unzip.changed
+
+    - name: Unarchive Dpdk-19.11
+      ansible.builtin.unarchive:
+        src: /opt/dpdk-19.11.tar.xz
+        dest: /opt
+        remote_src: yes
+      register: Dpdk_unarchive
+
+    - name: Unarchive Dpdk-19.11-patch
+      ansible.builtin.unarchive:
+        src: /opt/dpdk-19.11-patch.tgz
+        dest: /opt
+        remote_src: yes
+      register: Dpdk_unarchive_patch
+      
+    - name: Replace the string
+      replace:
+        regexp: CONFIG_RTE_LIBRTE_MLX5_PMD=.*
+        replace: CONFIG_RTE_LIBRTE_MLX5_PMD=y
+        path: /opt/dpdk-19.11/config/common_base
+      when: ansible_system_vendor == "Supermicro"
+        
+    - name: Replace the string 2
+      replace: 
+        regexp: CONFIG_RTE_LIBRTE_MLX5_DEBUG=.*
+        replace: CONFIG_RTE_LIBRTE_MLX5_DEBUG=y
+        path: /opt/dpdk-19.11/config/common_base
+      when: ansible_system_vendor == "Supermicro"
+        
+
+    - name: Build the DPDK
+      shell: |
+        export RTE_SDK="/opt/dpdk-19.11"
+        export RTE_TARGET="x86_64-native-linux-gcc"
+        export RTE_KERNELDIR="/lib/modules/3.10.0-693.2.2.rt56.623.el7.x86_64/build"
+        make config T=x86_64-native-linux-gcc install
+      args:
+        chdir: /opt/dpdk-19.11
+      when:  Dpdk_unarchive.changed
+        
+#     - name: Deleting the Files
+#       file:
+#         path: "{{ item}}"
+#         state: absent
+#       with_items:
+#         - /opt/nasm-2.14.02.tar.xz
+#         - /opt/v0.54.zip
+#         - /opt/dpdk-19.11.tar.xz
+#         - /opt/dpdk-19.11-patch.tgz
+         
+         
+       
+       
+         
+      

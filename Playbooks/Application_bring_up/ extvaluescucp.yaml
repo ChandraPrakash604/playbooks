@@ -1,0 +1,38 @@
+gnbOperationMode: OTA
+gnbConfigMode: O1CLI
+X2IpType: ipv4
+O1IpType: ipv4
+E1IpType: ipv4
+F1IpType: ipv4
+DpdkIpType: ipv4
+SIMIpType: ipv4
+podAnnotations:
+    danm.k8s.io/interfaces: |
+        [
+          {
+            "clusterNetwork": "default",
+            "ip": "dynamic"
+          },
+          {
+            "clusterNetwork": "sriov-x2c",
+            "ip": "dynamic"
+          },
+          {
+            "clusterNetwork": "sriov-f1c",
+            "ip": "192.168.52.10"
+          },
+          {
+            "clusterNetwork": "sriov-e1c",
+            "ip": "192.168.54.10"
+          },
+          {
+            "clusterNetwork": "sriov-o1c",
+            "ip": "10.209.101.90"
+          }
+        ]
+image:
+    repository: 5gl2devrepo:10080/nr5gl2dev/
+#    tag: ph1024_6.0.00.35.aws
+#debugManualAppStart: true
+nodeSelector:
+    "gnbnodename": "cumachine"

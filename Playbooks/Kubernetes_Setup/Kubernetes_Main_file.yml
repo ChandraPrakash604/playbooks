@@ -1,0 +1,4 @@
+- import_playbook: Install-Kubernetes-on-CentOS-7.yml
+- import_playbook: Initialize-Kubernetes-Master.yml
+- import_playbook: Join-worker-nodes-to-the-cluster.yml
+#- import_playbook: validate_pods_Status.yml

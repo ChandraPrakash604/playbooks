@@ -1,0 +1,30 @@
+---
+- name: Pull Docker Images
+  hosts: all
+  become: true
+  gather_facts: no
+  any_errors_fatal: yes
+  tasks: 
+    - name: Docker Login
+      shell: docker login --username onecellansible --password Commscope123
+      
+    - name: Docker Pull Required Images
+      shell: docker pull {{ item }}
+      with_items:
+         - docker-remote.binaryrepo-east.arrisi.com/calico/kube-controllers:v3.17.0
+         - docker-remote.binaryrepo-east.arrisi.com/calico/node:v3.17.0
+         - docker-remote.binaryrepo-east.arrisi.com/calico/typha:v3.17.0
+         - k8s.gcr.io/coredns:1.7.0
+         - k8s.gcr.io/coredns:1.7.0
+         - k8s.gcr.io/etcd:3.4.13-0
+         - k8s.gcr.io/kube-apiserver:v1.19.8
+         - k8s.gcr.io/kube-controller-manager:v1.19.8
+         - k8s.gcr.io/kube-proxy:v1.19.8
+         - k8s.gcr.io/kube-scheduler:v1.19.8
+         
+    - name: Tag the images id
+      shell: |
+         docker tag docker-remote.binaryrepo-east.arrisi.com/calico/kube-controllers:v3.17.0 calico/kube-controllers:v3.17.0
+         docker tag docker-remote.binaryrepo-east.arrisi.com/calico/node:v3.17.0  calico/node:v3.17.0
+         
+   

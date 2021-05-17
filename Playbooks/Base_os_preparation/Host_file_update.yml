@@ -1,0 +1,16 @@
+---
+- name: Update host file 
+  hosts: all
+  tasks:
+    - name: update hosts files for master
+      debug:
+        msg: "{{ansible_ssh_host}} {{server_type}}"
+      
+    - name: setting the hostname
+      set_fact:
+         hostname: "{{ansible_ssh_host| replace('.','')}}"
+    - debug:
+        msg: "{{server_type}}{{hostname}}"
+        
+    - name: set the hostname
+      shell: hostnamectl set-hostname "{{server_type}}{{hostname}}"
